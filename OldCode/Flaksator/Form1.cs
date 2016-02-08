@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using SharpDevs.Fleksator;
 using SharpDevs.Fleksator.Edit;
 
-using SpeechLib;
+//using SpeechLib;
 
 namespace Flaksator
 {
@@ -76,8 +76,8 @@ namespace Flaksator
 
         private void bSpeak_Click(object sender, EventArgs e)
         {
-            SpVoice objSpeech = new SpVoice();
-            objSpeech.Speak(this.textResults.Text, SpeechVoiceSpeakFlags.SVSFlagsAsync);
+            //SpVoice objSpeech = new SpVoice();
+            //objSpeech.Speak(this.textResults.Text, SpeechVoiceSpeakFlags.SVSFlagsAsync);
           //  objSpeech.WaitUntilDone(100000); 
 
         }

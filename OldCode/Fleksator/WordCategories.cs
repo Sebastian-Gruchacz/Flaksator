@@ -77,7 +77,9 @@ namespace SharpDevs.Fleksator
 #if DEBUG
                 if (key.Trim().StartsWith("EOF"))
                     break; // for testing purposes
-
+#else
+                if (key.Trim().StartsWith("EOF"))
+                    continue; // ignore
 #endif
                 if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
                     dic.Add(int.Parse(key), value);

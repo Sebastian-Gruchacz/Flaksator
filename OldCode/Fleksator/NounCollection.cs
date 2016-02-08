@@ -65,18 +65,20 @@ namespace SharpDevs.Fleksator
             {
                 while ((line = tr.ReadLine()) != null)
                 {
+#if DEBUG
+                    if (line.Trim().StartsWith("EOF"))
+                        break; // for testing purposes
+#else
+                    if (line.Trim().StartsWith("EOF"))
+                        continue; // ignore
+#endif
+                    if (line.Trim().StartsWith(";"))
+                        continue; // entry is commented out
+
+
                     Noun noun = _grammarSerializers.NounSerializer.Load(line);
                     if (noun != null)
                     {
-#if DEBUG
-                        if (line.Trim().StartsWith("EOF"))
-                            break; // for testing purposes
-
-#endif
-                        if (line.Trim().StartsWith(";"))
-                            continue; // entry is commented out
-
-
                         List<Noun> subList = null;
                         if (sortedNouns.ContainsKey(noun.Genre))
                             subList = sortedNouns[noun.Genre];

@@ -57,6 +57,9 @@ namespace SharpDevs.Fleksator
 #if DEBUG
                     if (line.Trim().StartsWith("EOF"))
                         break; // for testing purposes
+#else
+                    if (line.Trim().StartsWith("EOF"))
+                        continue; // ignore
 
 #endif
                     if (line.Trim().StartsWith(";"))

@@ -33,7 +33,7 @@ namespace SharpDevs.Helpers.Presentation
             get { return _value; }
             set { _value = value; }
         }
-	
+    
         /// <summary>
         /// The very stored object.
         /// </summary>
