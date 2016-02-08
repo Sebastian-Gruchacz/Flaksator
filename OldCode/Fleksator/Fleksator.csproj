@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{13DB240E-DE7E-4A97-A38A-7015205CCB38}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpDevs.Fleksator</RootNamespace>
+    <AssemblyName>SharpDevs.Fleksator</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Grammar\Enum.GrammaticalPart.cs" />
+    <Compile Include="Grammar\Enum.DecliantionNumber.cs" />
+    <Compile Include="Grammar\Enum.AdjectiveLevel.cs" />
+    <Compile Include="Grammar\Adjective.cs" />
+    <Compile Include="AdjectiveCollection.cs" />
+    <Compile Include="AdjectiveDecliner.cs" />
+    <Compile Include="AdjectiveWordToken.cs" />
+    <Compile Include="Grammar\ConjugativeGrammaticalWord.cs" />
+    <Compile Include="Grammar\DeflectionableGrammaticalWord.cs" />
+    <Compile Include="Edit\Controls\ControlAdjectiveCaseEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlAdjectiveCaseEdit.Designer.cs">
+      <DependentUpon>ControlAdjectiveCaseEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlCaseEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlCaseEdit.Designer.cs">
+      <DependentUpon>ControlCaseEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlEditAdjective.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlEditAdjective.Designer.cs">
+      <DependentUpon>ControlEditAdjective.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlEditNoun.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlEditNoun.Designer.cs">
+      <DependentUpon>ControlEditNoun.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlNounCaseEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Edit\Controls\ControlNounCaseEdit.Designer.cs">
+      <DependentUpon>ControlNounCaseEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\FormEditAdjectives.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Edit\FormEditAdjectives.Designer.cs">
+      <DependentUpon>FormEditAdjectives.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\FormEditNouns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Edit\FormEditNouns.Designer.cs">
+      <DependentUpon>FormEditNouns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\FormTestNounAndAdjective.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Edit\FormTestNounAndAdjective.Designer.cs">
+      <DependentUpon>FormTestNounAndAdjective.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit\IPhraseEditor.cs" />
+    <Compile Include="EnumHelper.cs" />
+    <Compile Include="EnumTranslator.cs" />
+    <Compile Include="Grammar\Enum.GrammaticalVoice.cs" />
+    <Compile Include="Grammar\NounGrammar.cs" />
+    <Compile Include="Helpers\Ini\ChangeList.cs" />
+    <Compile Include="Helpers\Ini\ChnagedStringList.cs" />
+    <Compile Include="Helpers\Ini\IniFile.cs" />
+    <Compile Include="Helpers\Ini\IniKey.cs" />
+    <Compile Include="Helpers\Ini\IniSection.cs" />
+    <Compile Include="Helpers\Option.cs" />
+    <Compile Include="Helpers\OptionDescribed.cs" />
+    <Compile Include="Grammar\Noun.cs" />
+    <Compile Include="IO\GrammarSerializersFactory.cs" />
+    <Compile Include="IO\IGrammarSerializers.cs" />
+    <Compile Include="IO\IGrammaticalPartLoader.cs" />
+    <Compile Include="IO\IGrammaticalPartWriter.cs" />
+    <Compile Include="IO\IGrammaticalWordSerializer.cs" />
+    <Compile Include="IO\Implementation\OldGrammarSerializers.cs" />
+    <Compile Include="IO\Implementation\OldNounSerializer.cs" />
+    <Compile Include="IO\Implementation\OldVerbSerializer.cs" />
+    <Compile Include="NounCollection.cs" />
+    <Compile Include="NounDecliner.cs" />
+    <Compile Include="NounPostfixToken.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Grammar\Verb.cs" />
+    <Compile Include="VerbConjurer.cs" />
+    <Compile Include="Grammar\GrammaticalWord.cs" />
+    <Compile Include="Grammar\Enum.InflectionCase.cs" />
+    <Compile Include="WordCategories.cs" />
+    <Compile Include="Grammar\Enum.GrammaticalGender.cs" />
+    <Compile Include="WordToken.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Translations.en-US.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edit\Controls\ControlEditAdjective.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ControlEditAdjective.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit\Controls\ControlEditNoun.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ControlEditNoun.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit\FormEditAdjectives.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormEditAdjectives.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit\FormEditNouns.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormEditNouns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit\FormTestNounAndAdjective.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormTestNounAndAdjective.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Translations.pl-PL.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

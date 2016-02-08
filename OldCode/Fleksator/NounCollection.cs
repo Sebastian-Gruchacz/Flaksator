@@ -1,0 +1,166 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using SharpDevs.Fleksator.Grammar;
+using SharpDevs.Fleksator.IO;
+
+namespace SharpDevs.Fleksator
+{
+    public class NounCollection
+    {
+        #region Singleton Implementation
+
+        private static volatile NounCollection _decliner = null;
+        private static object _lockObject = new object();
+
+        public static NounCollection Collection
+        {
+            get
+            {
+                if (_decliner == null)
+                {
+                    lock (_lockObject)
+                    {
+                        if (_decliner == null)
+                            _decliner = new NounCollection();
+                    }
+                }
+
+                return _decliner;
+            }
+        }
+
+        private NounCollection()
+        {
+            // TODO: zmieniæ na lepszy inject, wywaliæ singletony
+            _grammarSerializers = new GrammarSerializersFactory().GetOldSerializers();
+        }
+
+        #endregion
+
+        private List<Noun> nouns = new List<Noun>();
+        public List<Noun> Nouns
+        {
+            get { return nouns; }
+        }
+
+        public Dictionary<GrammaticalGender, List<Noun>> sortedNouns = new Dictionary<GrammaticalGender, List<Noun>>();
+        public Dictionary<GrammaticalGender, List<Noun>> SortedNouns
+        {
+            get { return sortedNouns; }
+        }
+
+
+        #region Loading & Saving
+
+        public void LoadFromFile(string filePath)
+        {
+            this.nouns.Clear();
+
+            FileInfo fi = new FileInfo(filePath);
+            TextReader tr = new StreamReader(fi.FullName, Encoding.Unicode, true);
+            string line = null;
+            try
+            {
+                while ((line = tr.ReadLine()) != null)
+                {
+                    Noun noun = _grammarSerializers.NounSerializer.Load(line);
+                    if (noun != null)
+                    {
+#if DEBUG
+                        if (line.Trim().StartsWith("EOF"))
+                            break; // for testing purposes
+
+#endif
+                        if (line.Trim().StartsWith(";"))
+                            continue; // entry is commented out
+
+
+                        List<Noun> subList = null;
+                        if (sortedNouns.ContainsKey(noun.Genre))
+                            subList = sortedNouns[noun.Genre];
+                        else
+                        {
+                            subList = new List<Noun>();
+                            sortedNouns.Add(noun.Genre, subList);
+                        }
+                        subList.Add(noun);
+                        this.nouns.Add(noun);
+
+                    }
+                }
+            }
+            finally
+            {
+                tr.Close();
+            }
+        }
+
+        public void SaveToFile(string filePath)
+        {
+            FileInfo fi = new FileInfo(filePath);
+            TextWriter tw = new StreamWriter(fi.FullName, false, Encoding.Unicode);
+            try
+            {
+                foreach (Noun noun in this.nouns)
+                {
+                    tw.WriteLine(_grammarSerializers.NounSerializer.Write(noun));
+                }
+            }
+            finally
+            {
+                tw.Close();
+            }
+        }
+
+        #endregion
+
+        Random rnd = new Random();
+
+        private IGrammarSerializers _grammarSerializers;
+
+        public Noun GetRandomNoun()
+        {
+            return this.nouns[rnd.Next(0, this.nouns.Count)];
+        }
+
+        public Noun GetRandomNoun(GrammaticalGender genre)
+        {
+            if (!sortedNouns.ContainsKey(genre))
+                return null;
+
+            List<Noun> subList = sortedNouns[genre];
+
+            if (subList.Count > 0)
+                return subList[rnd.Next(0, subList.Count)];
+            else
+                return null;
+        }
+
+        public Noun GetNoun(GrammaticalGender? genre, int? categoryId, bool shallSupportSingular, bool shallSupportPlural)
+        {
+            List<Noun> searchResults = nouns.FindAll(p => (genre == null || p.Genre == genre)
+                && (categoryId == null || p.Categories.Contains(categoryId ?? -1))
+                && (!shallSupportPlural || p.CanBePlural)
+                && (!shallSupportSingular || p.CanBeSingular));
+
+            if (searchResults == null || searchResults.Count < 1)
+                return null;
+
+            return searchResults[rnd.Next(0, searchResults.Count)];
+        }
+
+        public Noun GetNounEx(GrammaticalGender? genre, List<int> categoryIds, bool shallSupportSingular, bool shallSupportPlural)
+        {
+            List<Noun> searchResults = nouns.FindAll(p => (genre == null || p.Genre == genre)
+                && (categoryIds == null || categoryIds.Count == 0 || p.Categories.Exists(d => categoryIds.Contains(d)))
+                && (!shallSupportSingular || p.CanBeSingular));
+
+            if (searchResults == null || searchResults.Count < 1)
+                return null;
+
+            return searchResults[rnd.Next(0, searchResults.Count)];
+        }
+    }
+}
