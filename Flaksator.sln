@@ -3,13 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Obscureware.Flaksator", "Obscureware.Flaksator\Obscureware.Flaksator.csproj", "{B9476B2A-3D10-4A56-8374-9D8276EEF3D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObscureWare.Flaksator", "Obscureware.Flaksator\ObscureWare.Flaksator.csproj", "{B9476B2A-3D10-4A56-8374-9D8276EEF3D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OldCode", "OldCode", "{4666C34D-B010-4DE2-9430-BFC95EDD0D97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaksator", "OldCode\Flaksator\Flaksator.csproj", "{DD664180-3C80-42B5-9956-44A43D84A834}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleksator", "OldCode\Fleksator\Fleksator.csproj", "{13DB240E-DE7E-4A97-A38A-7015205CCB38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EADC0657-ABD3-4114-B23C-C3D314A4EBD2}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObscureWare.ErrorHandling", "Shared\ObscureWare.ErrorHandling\ObscureWare.ErrorHandling.csproj", "{17AB92DC-0DCA-4908-93CC-008FEE9D40CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObscureWare.ErrorHandling.Tests", "Shared\ObscureWare.ErrorHandling.Tests\ObscureWare.ErrorHandling.Tests.csproj", "{F010CBAD-C43B-4C8C-88DF-3424100E34B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObscureWare.Randomization", "Shared\ObscureWare.Randomization\ObscureWare.Randomization.csproj", "{925A89CD-2A63-43FD-BE0B-3CBC657A543B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +42,18 @@ Global
 		{13DB240E-DE7E-4A97-A38A-7015205CCB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13DB240E-DE7E-4A97-A38A-7015205CCB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13DB240E-DE7E-4A97-A38A-7015205CCB38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17AB92DC-0DCA-4908-93CC-008FEE9D40CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17AB92DC-0DCA-4908-93CC-008FEE9D40CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17AB92DC-0DCA-4908-93CC-008FEE9D40CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17AB92DC-0DCA-4908-93CC-008FEE9D40CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F010CBAD-C43B-4C8C-88DF-3424100E34B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F010CBAD-C43B-4C8C-88DF-3424100E34B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F010CBAD-C43B-4C8C-88DF-3424100E34B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F010CBAD-C43B-4C8C-88DF-3424100E34B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{925A89CD-2A63-43FD-BE0B-3CBC657A543B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{925A89CD-2A63-43FD-BE0B-3CBC657A543B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{925A89CD-2A63-43FD-BE0B-3CBC657A543B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{925A89CD-2A63-43FD-BE0B-3CBC657A543B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,5 +61,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DD664180-3C80-42B5-9956-44A43D84A834} = {4666C34D-B010-4DE2-9430-BFC95EDD0D97}
 		{13DB240E-DE7E-4A97-A38A-7015205CCB38} = {4666C34D-B010-4DE2-9430-BFC95EDD0D97}
+		{17AB92DC-0DCA-4908-93CC-008FEE9D40CC} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
+		{F010CBAD-C43B-4C8C-88DF-3424100E34B6} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
+		{925A89CD-2A63-43FD-BE0B-3CBC657A543B} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
 	EndGlobalSection
 EndGlobal
