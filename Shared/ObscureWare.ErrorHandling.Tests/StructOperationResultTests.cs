@@ -5,7 +5,14 @@ namespace ObscureWare.ErrorHandling.Tests
 {
     public class StructOperationResultTests
     {
-        readonly BusinessLogicRepository _testedInstance = new BusinessLogicRepository();
+        private readonly BusinessLogicRepository _testedInstance;
+        readonly ExternalBusinessLogicRepository _outerInstance;
+
+        public StructOperationResultTests()
+        {
+            _testedInstance = new BusinessLogicRepository();
+            _outerInstance = new ExternalBusinessLogicRepository(_testedInstance);
+        }
 
         [Test]
         public void ProperlyExecutedMethodShallReturnValidResult()
@@ -78,7 +85,6 @@ namespace ObscureWare.ErrorHandling.Tests
             Assert.Throws<InvalidOperationException>(() => Console.WriteLine(result.Value));
         }
 
-
         [Test]
         public void ProperSuccessfullHandling()
         {
@@ -89,7 +95,6 @@ namespace ObscureWare.ErrorHandling.Tests
             }
         }
 
-
         [Test]
         public void ProperFailureHandling()
         {
@@ -98,6 +103,29 @@ namespace ObscureWare.ErrorHandling.Tests
             {
                 Console.WriteLine(result.ErrorMessage);
             }
+        }
+
+        [Test]
+        public void PassedSuccessfullResultShallBeEqualToOriginal()
+        {
+            var result = _outerInstance.PassSuccessfullMergedOperation();
+            Assert.NotNull(result);
+            Assert.IsTrue(result.Success);
+            Assert.IsFalse(result.Failed);
+            Assert.AreEqual(ErrorCodes.Success, result.ErrorCode);
+            Assert.AreEqual(BusinessLogicRepository.SAMPLE_TEXT, result.Value.Item1);
+        }
+
+        [Test]
+        public void PassedFailingResultShallBeEqualToOriginal()
+        {
+            var result = _outerInstance.PassFailedMergedOperation();
+            Assert.NotNull(result);
+            Assert.IsTrue(result.Failed);
+            Assert.IsFalse(result.Success);
+            Assert.IsNull(result.Exception);
+            Assert.AreNotEqual(ErrorCodes.Success, result.ErrorCode);
+            Assert.AreEqual(BusinessLogicRepository.ERROR_MESSAGE, result.ErrorMessage);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace ObscureWare.ErrorHandling
     public struct OperationResult<T>
     {
         private readonly T _value;
-        private readonly Fail _fail;
+        internal readonly Fail _fail;
 
         public OperationResult(T value)
         {
@@ -110,6 +110,17 @@ namespace ObscureWare.ErrorHandling
         public static implicit operator OperationResult<T>(Fail fail)
         {
             return new OperationResult<T>(fail);
+        }
+
+        // SMG: This does not work unfortunatelly... :anger:
+        public static implicit operator Fail(OperationResult<T> value)
+        {
+            if (value.Success)
+            {
+                throw new InvalidOperationException(@"Only failing OperationResult objects can be passed further.");
+            }
+
+            return value._fail;
         }
     }
 }

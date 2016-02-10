@@ -43,6 +43,7 @@
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="Fail.cs" />
     <Compile Include="OperationResult.cs" />
+    <Compile Include="PropagateFail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrackedFail.cs" />
   </ItemGroup>
