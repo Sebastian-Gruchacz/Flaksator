@@ -10,9 +10,7 @@ namespace ObscureWare.Randomization
 {
     public interface IRandomizer
     {
-
-
-        
+        int NextInt(int minIncludedValue, int maxExcludedValue);
     }
 
 
