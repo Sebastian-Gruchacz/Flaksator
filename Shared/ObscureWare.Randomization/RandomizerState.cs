@@ -8,12 +8,6 @@ using System.Threading.Tasks;
 
 namespace ObscureWare.Randomization
 {
-    public interface IRandomizer
-    {
-        int NextInt(int minIncludedValue, int maxExcludedValue);
-    }
-
-
     public class RandomizerState<T> where T : IRandomizer
     {
         private readonly byte[] _state;
