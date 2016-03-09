@@ -50,7 +50,6 @@
     <Compile Include="RandomMT.cs" />
     <Compile Include="Rnd.cs" />
     <Compile Include="SystemRandomWrapper.cs" />
-    <Compile Include="WeightedContainer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
