@@ -51,8 +51,8 @@ namespace Randomization.Tests
             var m2 = new RandomMT((ulong)baseSeed);
             var m3 = new SharpDevs.Randomization.MersenneTwister(baseSeed);
             var m4 = new Random(baseSeed);
-            var maxRange = 100;
-            var iterations = 100000;
+            var maxRange = 1000;
+            var iterations = 10000000;
 
             var dist1 = CalculateDistribution(() => m1.RandomRange(0, maxRange - 1), maxRange, iterations);
             var dist2 = CalculateDistribution(() => m2.RandomRange(0, maxRange - 1), maxRange, iterations);
@@ -66,7 +66,7 @@ namespace Randomization.Tests
 
             Console.WriteLine("{0}\t{1}\t{2}\t{3}",
                 distribution1, distribution2, distribution3, distribution4);
-            var expectedFill = (decimal) iterations/maxRange;
+            var expectedFill = (decimal)iterations / maxRange;
             Console.WriteLine("Przy oczekiwanym napełnieniu: " + expectedFill);
             Console.WriteLine("Co daje procentowo:");
             Console.WriteLine("{0}\t{1}\t{2}\t{3}",
