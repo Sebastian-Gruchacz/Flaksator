@@ -45,12 +45,14 @@
     <Compile Include="IRandomizerEventSource.cs" />
     <Compile Include="MersenneTwister.cs" />
     <Compile Include="MT19937.cs" />
+    <Compile Include="IRandomizerBuilder.cs" />
     <Compile Include="RandomizerState.cs" />
     <Compile Include="IRandomizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomMT.cs" />
     <Compile Include="Rnd.cs" />
     <Compile Include="Serializer.cs" />
+    <Compile Include="SystemRandomizerBuilder.cs" />
     <Compile Include="SystemRnd.cs" />
     <Compile Include="WeightedContainer.cs" />
   </ItemGroup>
