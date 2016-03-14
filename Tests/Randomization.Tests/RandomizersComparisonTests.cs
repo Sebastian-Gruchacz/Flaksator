@@ -66,7 +66,7 @@ namespace Randomization.Tests
 
             Console.WriteLine("{0}\t{1}\t{2}\t{3}",
                 distribution1, distribution2, distribution3, distribution4);
-            var expectedFill = (decimal) iterations/maxRange;
+            var expectedFill = (decimal)iterations / maxRange;
             Console.WriteLine("Przy oczekiwanym napełnieniu: " + expectedFill);
             Console.WriteLine("Co daje procentowo:");
             Console.WriteLine("{0}\t{1}\t{2}\t{3}",

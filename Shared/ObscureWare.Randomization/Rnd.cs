@@ -1,129 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ObscureWare.Randomization;
-
-// Author: gruchs01 
-// Date Creation: 8/26/2008 11:54:58 AM
-// Description: 
-
-namespace SharpDevs.Randomization
+﻿namespace ObscureWare.Randomization
 {
-    public enum RandomizationEngine { System, MersenneTwister };
-
-    public sealed class Rnd //: IDebugLog
+    public abstract class Rnd<T> : IRandomizerEventSource, IRandomizer
     {
-        #region Singleton Implementation
+        protected readonly T _randomEngine;
 
-        private static object _lockObj = new object(); // lock object
-        private static volatile Rnd _instance; // instance
-
-        /// <summary>
-        /// The one instance of Rnd singleton 
-        /// </summary>
-        public static Rnd Instance
+        protected Rnd(T randomEngine)
         {
-            get
-            {
-                // do safe create singleton instance of the object
-                if (_instance == null)
-                    lock (_lockObj)
-                    {
-                        if (_instance == null)
-                            _instance = new Rnd();
-                    }
-
-                return _instance;
-            }
+            _randomEngine = randomEngine;
         }
 
-        // Private hidden ctor
-        private Rnd()
+        public event NextIntEventHandler OnNextInt;
+        public event NextMaxIntEventHandler OnNextMaxInt;
+        public event NextIntRangeEventHandler OnNextIntRange;
+        public event NextDoubleEventHandler OnNextDouble;
+
+        public int GetNext()
         {
-            InitializeInstance(); // this is done to put init code outside singleton region
+            int value = InnerGetNext();
+            OnNextInt?.Invoke(this, value);
+            return value;
         }
 
-        #endregion
-
-        private void InitializeInstance()
+        public int GetNext(int max)
         {
-            // Please provide here Singleton initialization code
-            DateTime dt = DateTime.Now;
-
-            systemEngine = new SystemRandomWrapper(dt.Millisecond);
-            twister = new MersenneTwister(dt.Millisecond);
-
-
-            // by default
-            selectedEngine = twister;
+            int value = InnerGetNext(max);
+            OnNextMaxInt?.Invoke(this, new NextMaxIntEventHandlerArgs(max, value));
+            return value;
         }
 
-        SystemRandomWrapper systemEngine = null;
-        MersenneTwister twister = null;
-
-        IRandomizer selectedEngine = null;
-
-        public void SelectEngine(RandomizationEngine engine)
+        public int GetNext(int min, int max)
         {
-            switch (engine)
-            {
-                case RandomizationEngine.System:
-                    selectedEngine = systemEngine;
-
-                    //LogDebug("Selected Random engine is System's one.");
-
-                    break;
-                case RandomizationEngine.MersenneTwister:
-                    selectedEngine = twister;
-
-                    //LogDebug("Selected Random engine is Mersenne Twister.");
-
-                    break;
-                default:
-                    break;
-            }
+            int value = InnerGetNext(min, max);
+            OnNextIntRange?.Invoke(this, new NextIntRangeEventHandlerArgs(min, max, value));
+            return value;
         }
 
-        /// <summary>
-        /// Set your own engine to use in app
-        /// </summary>
-        /// <param name="engine"></param>
-        public void SetCustomRandomizer(IRandomizer engine)
+        public double GetNextDouble()
         {
-            if (engine != null)
-            {
-                selectedEngine = engine;
-
-                //LogDebug(string.Format("Selected Random engine is custom engine: {0}", engine.GetType().FullName));
-            }
+            double value = InnerGetDouble();
+            OnNextDouble?.Invoke(this, value);
+            return value;
         }
+        
+        protected abstract int InnerGetNext();
 
-        public IRandomizer Engine
-        {
-            get
-            {
-                return selectedEngine;
-            }
-        }
+        protected abstract int InnerGetNext(int max);
 
-        #region IDebugLog Members
+        protected abstract int InnerGetNext(int min, int max);
 
-        //internal void LogDebug(string errMsg) // these are internal, because can be used by Textlibrary also...
-        //{
-        //    if (LogDebugMessage != null)
-        //        LogDebugMessage(errMsg);
-        //}
-
-        //internal void LogError(string errMsg, ErrorSeverity severity) // these are internal, because can be used by Textlibrary also...
-        //{
-        //    if (LogErrorMessage != null)
-        //        LogErrorMessage(errMsg, severity);
-        //}
-
-        //public event SharpDevs.Debugging.InvocationOfString LogDebugMessage;
-
-        //public event SharpDevs.Debugging.InvocationOfSeverityString LogErrorMessage;
-
-        #endregion
+        protected abstract double InnerGetDouble();
     }
 }

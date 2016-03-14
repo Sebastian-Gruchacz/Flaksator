@@ -16,21 +16,21 @@ namespace ObscureWare.Randomization
     {
         // TODO: make it singleton and IDebugable
 
-        public int Roll(int count, int diceSides)
+        public int Roll(int count, int diceSides, IRandomizer rnd)
         {
-            int result = Rnd.Instance.Engine.GetNext(count, diceSides * count + 1);
+            int result = rnd.GetNext(count, diceSides * count + 1);
 
             //DoDebugLog(string.Format("Dice roll: {0}d{1} = {2}", count, diceSides, result));
 
             return result;
         }
 
-        public int Roll(int count, Dices dice)
+        public int Roll(int count, Dices dice, IRandomizer rnd)
         {
-            return Roll(count, (int)dice);
+            return Roll(count, (int)dice, rnd);
         }
 
-        public int Roll(string rollDesc)
+        public int Roll(string rollDesc, IRandomizer rnd)
         {
             return -1; // TODO: implement parser
         }
@@ -40,14 +40,14 @@ namespace ObscureWare.Randomization
         /// </summary>
         /// <returns></returns>
         /// <remarks>There will be 1 to 9 rolled dices</remarks>
-        public int Roll()
+        public int Roll(IRandomizer rnd)
         {
-            int dicesCount = Rnd.Instance.Engine.GetNext(1, 10);
+            int dicesCount = rnd.GetNext(1, 10);
             string[] numDiceTypes = Enum.GetNames(typeof(Dices));
-            int selectedDiceIndex = Rnd.Instance.Engine.GetNext(numDiceTypes.Length);
+            int selectedDiceIndex = rnd.GetNext(numDiceTypes.Length);
             Dices selectedDice = (Dices)Enum.Parse(typeof(Dices), numDiceTypes[selectedDiceIndex]);
 
-            return Roll(dicesCount, selectedDice);
+            return Roll(dicesCount, selectedDice, rnd);
         }
 
         //private void DoDebugLog(string message)
