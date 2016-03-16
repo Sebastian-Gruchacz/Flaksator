@@ -2,7 +2,7 @@
 {
     public abstract class Rnd<T> : IRandomizerEventSource, IRandomizer
     {
-        protected readonly T _randomEngine;
+        private readonly T _randomEngine;
 
         protected Rnd(T randomEngine)
         {
@@ -16,38 +16,38 @@
 
         public int GetNext()
         {
-            int value = InnerGetNext();
+            int value = InnerGetNext(_randomEngine);
             OnNextInt?.Invoke(this, value);
             return value;
         }
 
         public int GetNext(int max)
         {
-            int value = InnerGetNext(max);
+            int value = InnerGetNext(_randomEngine, max);
             OnNextMaxInt?.Invoke(this, new NextMaxIntEventHandlerArgs(max, value));
             return value;
         }
 
         public int GetNext(int min, int max)
         {
-            int value = InnerGetNext(min, max);
+            int value = InnerGetNext(_randomEngine, min, max);
             OnNextIntRange?.Invoke(this, new NextIntRangeEventHandlerArgs(min, max, value));
             return value;
         }
 
         public double GetNextDouble()
         {
-            double value = InnerGetDouble();
+            double value = InnerGetDouble(_randomEngine);
             OnNextDouble?.Invoke(this, value);
             return value;
         }
         
-        protected abstract int InnerGetNext();
+        protected abstract int InnerGetNext(T engine);
 
-        protected abstract int InnerGetNext(int max);
+        protected abstract int InnerGetNext(T engine, int max);
 
-        protected abstract int InnerGetNext(int min, int max);
+        protected abstract int InnerGetNext(T engine, int min, int max);
 
-        protected abstract double InnerGetDouble();
+        protected abstract double InnerGetDouble(T engine);
     }
 }

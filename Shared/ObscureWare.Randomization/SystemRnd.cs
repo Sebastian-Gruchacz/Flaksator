@@ -8,24 +8,24 @@ namespace ObscureWare.Randomization
         {
         }
 
-        protected override int InnerGetNext()
+        protected override int InnerGetNext(Random engine)
         {
-            return _randomEngine.Next();
+            return engine.Next();
         }
 
-        protected override int InnerGetNext(int max)
+        protected override int InnerGetNext(Random engine, int max)
         {
-            return _randomEngine.Next(max);
+            return engine.Next(max);
         }
 
-        protected override int InnerGetNext(int min, int max)
+        protected override int InnerGetNext(Random engine, int min, int max)
         {
-            return _randomEngine.Next(min, max);
+            return engine.Next(min, max);
         }
 
-        protected override double InnerGetDouble()
+        protected override double InnerGetDouble(Random engine)
         {
-            return _randomEngine.NextDouble();
+            return engine.NextDouble();
         }
     }
 }

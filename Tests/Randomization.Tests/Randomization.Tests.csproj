@@ -49,7 +49,7 @@
     <Compile Include="FakeRnd.cs" />
     <Compile Include="RandomizersComparisonTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomizersInfrastructureTest.cs" />
+    <Compile Include="RandomizersInfrastructureTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

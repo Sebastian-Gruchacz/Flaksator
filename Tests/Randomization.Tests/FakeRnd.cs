@@ -4,31 +4,29 @@ namespace Randomization.Tests
 {
     public class FakeRnd : Rnd<FakeRandom>
     {
-        private readonly FakeRandom _fakeRandom;
-
         public FakeRnd(FakeRandom fakeRandom) : base(fakeRandom)
         {
-            _fakeRandom = fakeRandom;
+
         }
 
-        protected override int InnerGetNext()
+        protected override int InnerGetNext(FakeRandom engine)
         {
-            return _fakeRandom.GetNext();
+            return engine.GetNext();
         }
 
-        protected override int InnerGetNext(int max)
+        protected override int InnerGetNext(FakeRandom engine, int max)
         {
-            return _fakeRandom.GetNext(max);
+            return engine.GetNext(max);
         }
 
-        protected override int InnerGetNext(int min, int max)
+        protected override int InnerGetNext(FakeRandom engine, int min, int max)
         {
-            return _fakeRandom.GetNext(min, max);
+            return engine.GetNext(min, max);
         }
 
-        protected override double InnerGetDouble()
+        protected override double InnerGetDouble(FakeRandom engine)
         {
-            return _fakeRandom.GetNextDouble();
+            return engine.GetNextDouble();
         }
     }
 }
