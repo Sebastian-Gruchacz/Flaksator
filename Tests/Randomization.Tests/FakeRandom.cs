@@ -11,7 +11,7 @@ namespace Randomization.Tests
         {
             if (fakeSequence == null) throw new ArgumentNullException(nameof(fakeSequence));
             if (fakeSequence.Length == 0)
-                throw new ArgumentException("Argument is empty collection", nameof(fakeSequence));
+                throw new ArgumentException(@"Argument is empty collection", nameof(fakeSequence));
 
             _fakeSequence = fakeSequence;
             _index = 0;
@@ -33,7 +33,12 @@ namespace Randomization.Tests
         {
             try
             {
-                return _fakeSequence[_index];
+                int value = _fakeSequence[_index];
+                if (value >= max)
+                {
+                    throw new TestException(@"Value in FakeRandom sequence is greater than expected GetNext(max) boundary.");
+                }
+                return value;
             }
             finally
             {
@@ -45,7 +50,16 @@ namespace Randomization.Tests
         {
             try
             {
-                return _fakeSequence[_index];
+                int value = _fakeSequence[_index];
+                if (value < min)
+                {
+                    throw new TestException(@"Value in FakeRandom sequence is lower than expected GetNext(min, max) boundary.");
+                }
+                if (value >= max)
+                {
+                    throw new TestException(@"Value in FakeRandom sequence is greater than expected GetNext(min, max) boundary.");
+                }
+                return value;
             }
             finally
             {
