@@ -55,11 +55,12 @@ namespace SharpDevs.Fleksator.Grammar
 
         public void AnalyzeLine(object writeNoun)
         {
-            throw new System.NotImplementedException("Missing code!");
+            //throw new System.NotImplementedException("Missing code!");
         }
 
         public object WriteNoun()
         {
+            return this;
             throw new System.NotImplementedException("Missing code!");
         }
     }

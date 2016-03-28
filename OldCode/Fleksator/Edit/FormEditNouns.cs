@@ -24,6 +24,9 @@ namespace SharpDevs.Fleksator.Edit
 
         private void FormEditNouns_Load(object sender, EventArgs e)
         {
+            // workaround - let it work
+            _grammarSerializers = new GrammarSerializersFactory().GetOldSerializers();
+
             this.chlistCategories.Items.Clear();
             foreach (int key in WordCategories.Categories.NounCategories.Keys)
             {
