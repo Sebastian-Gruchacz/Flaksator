@@ -50,6 +50,7 @@
     <Compile Include="RandomizersComparisonTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomizersInfrastructureTests.cs" />
+    <Compile Include="TestException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
