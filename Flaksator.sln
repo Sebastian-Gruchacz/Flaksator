@@ -32,6 +32,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomization.Tests", "Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grammar.Tests", "Grammar.Tests\Grammar.Tests.csproj", "{17C58B1A-5183-460E-8832-0EBCDFB6FDDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObscureWare.DocumentDatabase", "ObscureWare.DocumentDatabase\ObscureWare.DocumentDatabase.csproj", "{9A63C873-71A4-43DC-94CA-2F0C45DF06AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BIN", "BIN", "{6F3858C7-10EC-4B8E-942C-EB449CC4D70D}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\BIN\LiteDB-v.2.0.0-rc.zip = Shared\BIN\LiteDB-v.2.0.0-rc.zip
+		Shared\BIN\LiteDB.dll = Shared\BIN\LiteDB.dll
+		Shared\BIN\LiteDB.Shell.exe = Shared\BIN\LiteDB.Shell.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +83,10 @@ Global
 		{17C58B1A-5183-460E-8832-0EBCDFB6FDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C58B1A-5183-460E-8832-0EBCDFB6FDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C58B1A-5183-460E-8832-0EBCDFB6FDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A63C873-71A4-43DC-94CA-2F0C45DF06AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A63C873-71A4-43DC-94CA-2F0C45DF06AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A63C873-71A4-43DC-94CA-2F0C45DF06AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A63C873-71A4-43DC-94CA-2F0C45DF06AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,5 +99,7 @@ Global
 		{925A89CD-2A63-43FD-BE0B-3CBC657A543B} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
 		{A77ADBEC-EC4E-498D-8877-0C6D09469327} = {0A070A46-3706-457A-8B7E-532C9B3C1F7D}
 		{17C58B1A-5183-460E-8832-0EBCDFB6FDDA} = {0A070A46-3706-457A-8B7E-532C9B3C1F7D}
+		{9A63C873-71A4-43DC-94CA-2F0C45DF06AA} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
+		{6F3858C7-10EC-4B8E-942C-EB449CC4D70D} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
 	EndGlobalSection
 EndGlobal
