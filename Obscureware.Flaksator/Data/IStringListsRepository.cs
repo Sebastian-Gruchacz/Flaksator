@@ -2,7 +2,7 @@
 
 namespace Obscureware.Flaksator
 {
-    public interface IDictionariesRepository
+    public interface IStringListsRepository
     {
         IEnumerable<string> GetTitles();
         IEnumerable<string> GetTitleExtenders();

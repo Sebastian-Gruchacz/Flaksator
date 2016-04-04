@@ -5,13 +5,13 @@ using LiteDB;
 
 namespace ObscureWare.DocumentDatabase
 {
-    internal class DocumentDatabaseConnect : IDocumentDatabase, IDisposable
+    public abstract class BaseDocumentDatabase: IDisposable
     {
         private readonly string _dbPath;
         private readonly LiteDatabase _db;
         //private readonly Lazy<IDictionariesRepository> _dictionariesRepository;
 
-        protected DocumentDatabaseConnect(string dbPath)
+        protected BaseDocumentDatabase(string dbPath)
         {
             if (String.IsNullOrWhiteSpace(dbPath))
                 throw new ArgumentException("Argument is null or whitespace", nameof(dbPath));
@@ -33,6 +33,11 @@ namespace ObscureWare.DocumentDatabase
         public string DbPath
         {
             get { return _dbPath; }
+        }
+
+        protected LiteDatabase Db
+        {
+            get { return _db; }
         }
 
         //public Version GetLibraryVersion(string libraryName, Version currentLibraryVersion)

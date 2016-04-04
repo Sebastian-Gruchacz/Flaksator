@@ -2,14 +2,15 @@
 using LiteDB;
 using ObscureWare.DocumentDatabase;
 
-namespace Obscureware.Flaksator
+namespace Obscureware.Flaksator.Data
 {
-    internal class LiteDictionariesRepository : BaseListRepository, IDictionariesRepository
+    internal class LightStringListsRepository : BaseListRepository,
+        IStringListsRepository
     {
         private const string TITLES = @"TITLES";
         private const string TITLE_EXTENDERS = @"TITLE_EXTENDERS";
 
-        public LiteDictionariesRepository(LiteDatabase db) : base(db)
+        public LightStringListsRepository(LiteDatabase db) : base(db)
         {
 
         }

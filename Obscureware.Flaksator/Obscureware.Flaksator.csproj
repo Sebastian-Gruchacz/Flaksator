@@ -45,8 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="IDictionariesRepository.cs" />
-    <Compile Include="LiteDictionariesRepository.cs" />
+    <Compile Include="FlaksatorDataFactory.cs" />
+    <Compile Include="Data\FlaksatorDatabase.cs" />
+    <Compile Include="Data\IStringListsRepository.cs" />
+    <Compile Include="Data\IDocumentDatabase.cs" />
+    <Compile Include="Data\LightStringListsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
