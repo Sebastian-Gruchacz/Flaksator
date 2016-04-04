@@ -1,17 +1,25 @@
-﻿namespace ObscureWare.DocumentDatabase
+﻿using System.Collections.Generic;
+using System.Linq;
+using LiteDB;
+
+namespace ObscureWare.DocumentDatabase
 {
-    internal class StringWrapper
+    public class StringWrapper
     {
         public StringWrapper()
         {
             
         }
 
-        public StringWrapper(string value)
+        public StringWrapper(string key, IEnumerable<string> strings)
         {
-            Value = value;
+            Key = key;
+            Strings = strings.ToArray();
         }
 
-        public string Value { get; set; }
+        [BsonId]
+        public string Key { get; set; }
+
+        public string[] Strings { get; set; }
     }
 }

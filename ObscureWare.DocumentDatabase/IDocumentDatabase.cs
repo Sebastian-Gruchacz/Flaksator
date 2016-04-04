@@ -2,7 +2,7 @@
 {
     public interface IDocumentDatabase
     {
-        IDictionariesRepository Dictionaries { get; }
+        //IDictionariesRepository Dictionaries { get; }
 
 
     }

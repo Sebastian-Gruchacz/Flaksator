@@ -9,7 +9,7 @@ namespace ObscureWare.DocumentDatabase
     {
         private readonly string _dbPath;
         private readonly LiteDatabase _db;
-        private readonly Lazy<IDictionariesRepository> _dictionariesRepository;
+        //private readonly Lazy<IDictionariesRepository> _dictionariesRepository;
 
         protected DocumentDatabaseConnect(string dbPath)
         {
@@ -19,7 +19,7 @@ namespace ObscureWare.DocumentDatabase
             _dbPath = dbPath;
             _db = new LiteDatabase(_dbPath);
 
-            _dictionariesRepository = new Lazy<IDictionariesRepository>(() => new LiteDictionariesRepository(_db));
+            //_dictionariesRepository = new Lazy<IDictionariesRepository>(() => new LiteDictionariesRepository(_db));
         }
 
         public void Dispose() // TODO: full implementation
@@ -63,9 +63,9 @@ namespace ObscureWare.DocumentDatabase
         //    collection.Insert(languages);
         //}
 
-        public IDictionariesRepository Dictionaries
-        {
-            get { return _dictionariesRepository.Value; }
-        }
+        //public IDictionariesRepository Dictionaries
+        //{
+        //    get { return _dictionariesRepository.Value; }
+        //}
     }
 }
