@@ -32,10 +32,14 @@ namespace Obscureware.Flaksator
             DirectoryInfo dir = new DirectoryInfo(currentFolder);
             var dirs = dir.GetDirectories();
             if (dirs.Select(d => d.Name).Contains(searchedName))
+            {
                 return currentFolder;
+            }
             var files = dir.GetFiles();
             if (files.Select(f => f.Name).Contains(searchedName))
+            {
                 return currentFolder;
+            }
             if (currentFolder == root)
             {
                 throw new InvalidOperationException("Could not locate valid data folder.");

@@ -4,14 +4,14 @@ using LiteDB;
 
 namespace ObscureWare.DocumentDatabase
 {
-    public class StringWrapper
+    public class StringCollectionWrapper
     {
-        public StringWrapper()
+        public StringCollectionWrapper()
         {
             
         }
 
-        public StringWrapper(string key, IEnumerable<string> strings)
+        public StringCollectionWrapper(string key, IEnumerable<string> strings)
         {
             Key = key;
             Strings = strings.ToArray();

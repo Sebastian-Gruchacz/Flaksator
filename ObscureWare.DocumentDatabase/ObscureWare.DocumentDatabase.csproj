@@ -52,8 +52,9 @@
   <ItemGroup>
     <Compile Include="BaseListRepository.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="DictionaryWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringWrapper.cs" />
+    <Compile Include="StringCollectionWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
