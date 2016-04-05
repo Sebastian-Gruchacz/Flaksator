@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDictionaryRepository.cs" />
     <Compile Include="BaseListRepository.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DictionaryWrapper.cs" />
