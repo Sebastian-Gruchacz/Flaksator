@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Obscureware.Flaksator
+namespace Obscureware.Flaksator.Data
 {
     public interface IStringListsRepository
     {

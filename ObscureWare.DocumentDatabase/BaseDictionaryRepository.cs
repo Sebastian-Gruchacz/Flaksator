@@ -4,18 +4,18 @@ using LiteDB;
 
 namespace ObscureWare.DocumentDatabase
 {
-    public abstract class BaseDictionaryRepository<TKey, TValue>
+    public class BaseDictionaryRepository<TKey, TValue>
     {
         private const string DICTIONARIES_IDENTIFIER = @"DICTIONARIES";
         
         private readonly LiteDatabase _db;
 
-        protected BaseDictionaryRepository(LiteDatabase db)
+        public BaseDictionaryRepository(LiteDatabase db)
         {
             _db = db;
         }
 
-        protected Dictionary<TKey, TValue> GetDictionary(string collectionKey)
+        public Dictionary<TKey, TValue> GetDictionary(string collectionKey)
         {
             var wrapper = _db.GetCollection<DictionaryWrapper<TKey, TValue>>(DICTIONARIES_IDENTIFIER)
                 .Find(w => w.Key == collectionKey).SingleOrDefault();
@@ -27,7 +27,7 @@ namespace ObscureWare.DocumentDatabase
             return new Dictionary<TKey, TValue>();
         }
 
-        protected void SaveDictionary(string collectionKey, Dictionary<TKey, TValue> dictionary)
+        public void SaveDictionary(string collectionKey, Dictionary<TKey, TValue> dictionary)
         {
             var collection = _db.GetCollection<DictionaryWrapper<TKey, TValue>>(DICTIONARIES_IDENTIFIER);
             var wrapper = collection.Find(w => w.Key == collectionKey).SingleOrDefault();

@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Obscureware.Flaksator;
+using Obscureware.Flaksator.Data;
 
 namespace DataOperations.Tests
 {
@@ -94,6 +96,36 @@ namespace DataOperations.Tests
 
                 Assert.That(titles.Contains(@"{NN1N} {NG1F}"));
                 Assert.That(titles.Contains(@"{NN1T} Nieopodal {1:A???E} {1:NG1T}"));
+            }
+        }
+        
+        [Test]
+        //[Ignore("Build-time only test")]
+        public void constant_piece_transaltionsFill_in_title_strings()
+        {
+            using (var db = factory.CreateDatabase())
+            {
+                var dic = new Dictionary<SongPiece, string>();
+                dic.Add(SongPiece.Stanza, "--zwrotka--");
+                dic.Add(SongPiece.Chorus, "chór");
+                dic.Add(SongPiece.Bridge, "przejście");
+                dic.Add(SongPiece.Interlude, "interludium");
+                dic.Add(SongPiece.Refrain, "refren");
+
+                db.DictionaryResources.SaveConstantSongPieces(dic);
+            }
+        }
+
+
+        [Test]
+        public void verify_that_some_constant_piece_transaltions_exist()
+        {
+            using (var db = factory.CreateDatabase())
+            {
+                var translations = db.DictionaryResources.GetConstantSongPieces();
+
+                Assert.That(translations.ContainsKey(SongPiece.Chorus));
+                Assert.That(translations[SongPiece.Chorus] == "chór");
             }
         }
     }

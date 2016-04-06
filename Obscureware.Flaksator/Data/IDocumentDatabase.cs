@@ -6,6 +6,6 @@ namespace Obscureware.Flaksator.Data
     {
         IStringListsRepository ListResources { get; }
 
-
+        IDictionaryRepositories DictionaryResources { get; }
     }
 }
