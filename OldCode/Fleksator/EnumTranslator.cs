@@ -37,7 +37,7 @@ namespace SharpDevs.Fleksator
 
                         Stream str = null;
                         StreamReader tr = null;
-                        SharpDevs.Helpers.IniFile file = null;
+                        Helpers.IniFile file = null;
 
                         try
                         {
@@ -55,7 +55,7 @@ namespace SharpDevs.Fleksator
                                 str = resAsm.GetManifestResourceStream("SharpDevs.Fleksator.Translations.txt");    // DO NOT TRANSLATE
                                 tr = new StreamReader(str);
 
-                                file = new SharpDevs.Helpers.IniFile();
+                                file = new Helpers.IniFile();
                                 file.Load(tr);
                             }
                             else
@@ -161,31 +161,31 @@ namespace SharpDevs.Fleksator
         Dictionary<string, string> translationsAdjectiveLevel = new Dictionary<string, string>();
         public string TranslateAdjectiveLevel(AdjectiveLevel level)
         {
-            return translationsAdjectiveLevel[level.ToString()];
+            return this.translationsAdjectiveLevel[level.ToString()];
         }
 
         Dictionary<string, string> translationsWordCase = new Dictionary<string, string>();
         public string TranslateWordCase(InflectionCase inflectionCase)
         {
-            return translationsWordCase[inflectionCase.ToString()];
+            return this.translationsWordCase[inflectionCase.ToString()];
         }
 
         Dictionary<string, string> translationsWordGenre = new Dictionary<string, string>();
         public string TranslateWordGenre(GrammaticalGender genre)
         {
-            return translationsWordGenre[genre.ToString()];
+            return this.translationsWordGenre[genre.ToString()];
         }
 
         Dictionary<string, string> translationsWordAmount = new Dictionary<string, string>();
         public string TranslateWordAmount(DecliantionNumber amount)
         {
-            return translationsWordAmount[amount.ToString()];
+            return this.translationsWordAmount[amount.ToString()];
         }
 
         Dictionary<string, string> translationsGrammarPart = new Dictionary<string, string>();
         public string TranslateGrammarPart(GrammaticalPart part)
         {
-            return translationsGrammarPart[part.ToString()];
+            return this.translationsGrammarPart[part.ToString()];
         }
 
 

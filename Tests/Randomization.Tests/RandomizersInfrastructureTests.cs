@@ -1,10 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using NUnit.Framework;
-using ObscureWare.Randomization;
-
-namespace Randomization.Tests
+﻿namespace Randomization.Tests
 {
+    using System;
+    using System.Diagnostics;
+
+    using NUnit.Framework;
+
+    using ObscureWare.Randomization;
+
     [TestFixture]
     public class RandomizersInfrastructureTests
     {

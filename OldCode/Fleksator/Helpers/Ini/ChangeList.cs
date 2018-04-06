@@ -11,106 +11,106 @@ namespace SharpDevs.Helpers.Ini
 
         protected void SetChanged()
         {
-            if (OnChange != null)
-                OnChange(this, new EventArgs());
+            if (this.OnChange != null)
+                this.OnChange(this, new EventArgs());
         }
 
         public new void Add(T item)
         {            
             base.Add(item);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void AddRange(IEnumerable<T> collection)
         {
             base.AddRange(collection);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Clear()
         {
             base.Clear();
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Insert(int index, T item)
         {
             base.Insert(index, item);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void InsertRange(int index, IEnumerable<T> collection)
         {
             base.InsertRange(index, collection);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new bool Remove(T item)
         {
             bool result = base.Remove(item);
-            SetChanged();
+            this.SetChanged();
             return result;
         }
 
         public new int RemoveAll(Predicate<T> match)
         {
             int result = base.RemoveAll(match);
-            SetChanged();
+            this.SetChanged();
             return result;
         }
 
         public new void RemoveAt(int index)
         {
             base.RemoveAt(index);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void RemoveRange(int index, int count)
         {
             base.RemoveRange(index, count);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Reverse(int index, int count)
         {
             base.Reverse(index, count);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Reverse()
         {
             base.Reverse();
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Sort(Comparison<T> comparison)
         {
             base.Sort(comparison);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Sort()
         {
             base.Sort();
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Sort(int index, int count, IComparer<T> comparer)
         {
             base.Sort(index, count, comparer);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void Sort(IComparer<T> comparer)
         {
             base.Sort(comparer);
-            SetChanged();
+            this.SetChanged();
         }
 
         public new void TrimExcess()
         {
             base.TrimExcess();
-            SetChanged();
+            this.SetChanged();
         }
 
         //[Obsolete()]

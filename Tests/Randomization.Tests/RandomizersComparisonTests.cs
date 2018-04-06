@@ -1,12 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using MersenneTwister;
-using NUnit.Framework;
-using SharpDevs.Randomization;
-
-namespace Randomization.Tests
+﻿namespace Randomization.Tests
 {
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+
+    using MersenneTwister;
+
+    using NUnit.Framework;
+
+    using SharpDevs.Randomization;
+
     [TestFixture]
     public class RandomizersComparisonTests
     {
@@ -54,15 +57,15 @@ namespace Randomization.Tests
             var maxRange = 1000;
             var iterations = 10000000;
 
-            var dist1 = CalculateDistribution(() => m1.RandomRange(0, maxRange - 1), maxRange, iterations);
-            var dist2 = CalculateDistribution(() => m2.RandomRange(0, maxRange - 1), maxRange, iterations);
-            var dist3 = CalculateDistribution(() => m3.GetNext(0, maxRange), maxRange, iterations);
-            var dist4 = CalculateDistribution(() => m4.Next(0, maxRange), maxRange, iterations);
+            var dist1 = this.CalculateDistribution(() => m1.RandomRange(0, maxRange - 1), maxRange, iterations);
+            var dist2 = this.CalculateDistribution(() => m2.RandomRange(0, maxRange - 1), maxRange, iterations);
+            var dist3 = this.CalculateDistribution(() => m3.GetNext(0, maxRange), maxRange, iterations);
+            var dist4 = this.CalculateDistribution(() => m4.Next(0, maxRange), maxRange, iterations);
 
-            var distribution1 = AnalyzeDistribution(dist1, iterations);
-            var distribution2 = AnalyzeDistribution(dist2, iterations);
-            var distribution3 = AnalyzeDistribution(dist3, iterations);
-            var distribution4 = AnalyzeDistribution(dist4, iterations);
+            var distribution1 = this.AnalyzeDistribution(dist1, iterations);
+            var distribution2 = this.AnalyzeDistribution(dist2, iterations);
+            var distribution3 = this.AnalyzeDistribution(dist3, iterations);
+            var distribution4 = this.AnalyzeDistribution(dist4, iterations);
 
             Console.WriteLine("{0}\t{1}\t{2}\t{3}",
                 distribution1, distribution2, distribution3, distribution4);

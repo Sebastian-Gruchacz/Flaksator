@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ObscureWare.ErrorHandling
+﻿namespace ObscureWare.ErrorHandling
 {
+    using System;
+
     public static class Propagate
     {
         //public static OperationResult<T> Fail<T>(OperationResult<object> innerFail)
@@ -25,7 +21,7 @@ namespace ObscureWare.ErrorHandling
                 throw new InvalidOperationException(@"Only failing OperationResult objects can be passed further.");
             }
 
-            return innerFail._fail; // will be converted into valid result later-on
+            return innerFail.Fail; // will be converted into valid result later-on
         }
     }
 }

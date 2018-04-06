@@ -15,7 +15,7 @@ namespace SharpDevs.Helpers.Presentation
     {
         public StandardTextBox()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private bool ctrlPressed = false;
@@ -23,11 +23,11 @@ namespace SharpDevs.Helpers.Presentation
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if ((keyData & leftControl) == leftControl)
+            if ((keyData & this.leftControl) == this.leftControl)
             {
-                ctrlPressed = (msg.Msg == 0x100); // WM_KEYDOWN
+                this.ctrlPressed = (msg.Msg == 0x100); // WM_KEYDOWN
             }
-            if (ctrlPressed)
+            if (this.ctrlPressed)
             {
                 if ((keyData & Keys.A) == Keys.A)
                 {

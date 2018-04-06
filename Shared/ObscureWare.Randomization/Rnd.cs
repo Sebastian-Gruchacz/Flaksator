@@ -6,7 +6,7 @@
 
         protected Rnd(T randomEngine)
         {
-            _randomEngine = randomEngine;
+            this._randomEngine = randomEngine;
         }
 
         public event NextIntEventHandler OnNextInt;
@@ -16,29 +16,29 @@
 
         public int GetNext()
         {
-            int value = InnerGetNext(_randomEngine);
-            OnNextInt?.Invoke(this, value);
+            int value = this.InnerGetNext(this._randomEngine);
+            this.OnNextInt?.Invoke(this, value);
             return value;
         }
 
         public int GetNext(int max)
         {
-            int value = InnerGetNext(_randomEngine, max);
-            OnNextMaxInt?.Invoke(this, new NextMaxIntEventHandlerArgs(max, value));
+            int value = this.InnerGetNext(this._randomEngine, max);
+            this.OnNextMaxInt?.Invoke(this, new NextMaxIntEventHandlerArgs(max, value));
             return value;
         }
 
         public int GetNext(int min, int max)
         {
-            int value = InnerGetNext(_randomEngine, min, max);
-            OnNextIntRange?.Invoke(this, new NextIntRangeEventHandlerArgs(min, max, value));
+            int value = this.InnerGetNext(this._randomEngine, min, max);
+            this.OnNextIntRange?.Invoke(this, new NextIntRangeEventHandlerArgs(min, max, value));
             return value;
         }
 
         public double GetNextDouble()
         {
-            double value = InnerGetDouble(_randomEngine);
-            OnNextDouble?.Invoke(this, value);
+            double value = this.InnerGetDouble(this._randomEngine);
+            this.OnNextDouble?.Invoke(this, value);
             return value;
         }
         

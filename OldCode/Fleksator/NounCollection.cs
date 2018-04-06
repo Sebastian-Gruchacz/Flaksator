@@ -34,7 +34,7 @@ namespace SharpDevs.Fleksator
         private NounCollection()
         {
             // TODO: zmieniæ na lepszy inject, wywaliæ singletony
-            _grammarSerializers = new GrammarSerializersFactory().GetOldSerializers();
+            this._grammarSerializers = new GrammarSerializersFactory().GetOldSerializers();
         }
 
         #endregion
@@ -42,13 +42,13 @@ namespace SharpDevs.Fleksator
         private List<Noun> nouns = new List<Noun>();
         public List<Noun> Nouns
         {
-            get { return nouns; }
+            get { return this.nouns; }
         }
 
         public Dictionary<GrammaticalGender, List<Noun>> sortedNouns = new Dictionary<GrammaticalGender, List<Noun>>();
         public Dictionary<GrammaticalGender, List<Noun>> SortedNouns
         {
-            get { return sortedNouns; }
+            get { return this.sortedNouns; }
         }
 
 
@@ -76,16 +76,16 @@ namespace SharpDevs.Fleksator
                         continue; // entry is commented out
 
 
-                    Noun noun = _grammarSerializers.NounSerializer.Load(line);
+                    Noun noun = this._grammarSerializers.NounSerializer.Load(line);
                     if (noun != null)
                     {
                         List<Noun> subList = null;
-                        if (sortedNouns.ContainsKey(noun.Genre))
-                            subList = sortedNouns[noun.Genre];
+                        if (this.sortedNouns.ContainsKey(noun.Genre))
+                            subList = this.sortedNouns[noun.Genre];
                         else
                         {
                             subList = new List<Noun>();
-                            sortedNouns.Add(noun.Genre, subList);
+                            this.sortedNouns.Add(noun.Genre, subList);
                         }
                         subList.Add(noun);
                         this.nouns.Add(noun);
@@ -107,7 +107,7 @@ namespace SharpDevs.Fleksator
             {
                 foreach (Noun noun in this.nouns)
                 {
-                    tw.WriteLine(_grammarSerializers.NounSerializer.Write(noun));
+                    tw.WriteLine(this._grammarSerializers.NounSerializer.Write(noun));
                 }
             }
             finally
@@ -124,25 +124,25 @@ namespace SharpDevs.Fleksator
 
         public Noun GetRandomNoun()
         {
-            return this.nouns[rnd.Next(0, this.nouns.Count)];
+            return this.nouns[this.rnd.Next(0, this.nouns.Count)];
         }
 
         public Noun GetRandomNoun(GrammaticalGender genre)
         {
-            if (!sortedNouns.ContainsKey(genre))
+            if (!this.sortedNouns.ContainsKey(genre))
                 return null;
 
-            List<Noun> subList = sortedNouns[genre];
+            List<Noun> subList = this.sortedNouns[genre];
 
             if (subList.Count > 0)
-                return subList[rnd.Next(0, subList.Count)];
+                return subList[this.rnd.Next(0, subList.Count)];
             else
                 return null;
         }
 
         public Noun GetNoun(GrammaticalGender? genre, int? categoryId, bool shallSupportSingular, bool shallSupportPlural)
         {
-            List<Noun> searchResults = nouns.FindAll(p => (genre == null || p.Genre == genre)
+            List<Noun> searchResults = this.nouns.FindAll(p => (genre == null || p.Genre == genre)
                 && (categoryId == null || p.Categories.Contains(categoryId ?? -1))
                 && (!shallSupportPlural || p.CanBePlural)
                 && (!shallSupportSingular || p.CanBeSingular));
@@ -150,19 +150,19 @@ namespace SharpDevs.Fleksator
             if (searchResults == null || searchResults.Count < 1)
                 return null;
 
-            return searchResults[rnd.Next(0, searchResults.Count)];
+            return searchResults[this.rnd.Next(0, searchResults.Count)];
         }
 
         public Noun GetNounEx(GrammaticalGender? genre, List<int> categoryIds, bool shallSupportSingular, bool shallSupportPlural)
         {
-            List<Noun> searchResults = nouns.FindAll(p => (genre == null || p.Genre == genre)
+            List<Noun> searchResults = this.nouns.FindAll(p => (genre == null || p.Genre == genre)
                 && (categoryIds == null || categoryIds.Count == 0 || p.Categories.Exists(d => categoryIds.Contains(d)))
                 && (!shallSupportSingular || p.CanBeSingular));
 
             if (searchResults == null || searchResults.Count < 1)
                 return null;
 
-            return searchResults[rnd.Next(0, searchResults.Count)];
+            return searchResults[this.rnd.Next(0, searchResults.Count)];
         }
     }
 }

@@ -16,9 +16,9 @@ namespace SharpDevs.Fleksator.Edit
 
         public FormTestNounAndAdjective()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            LoadGenres(this.cboGenre, true);
+            this.LoadGenres(this.cboGenre, true);
         }
 
         private Noun edited = null;
@@ -26,16 +26,16 @@ namespace SharpDevs.Fleksator.Edit
 
         public void SetNoun(Noun noun)
         {
-            edited = noun;
+            this.edited = noun;
 
-            RandomAdjective();
+            this.RandomAdjective();
 
-            for (int i = 0; i < cboGenre.Items.Count; i++)
+            for (int i = 0; i < this.cboGenre.Items.Count; i++)
             {
-                if (((Option<GrammaticalGender>)cboGenre.Items[i]).Key == edited.IrregularGenre)
+                if (((Option<GrammaticalGender>) this.cboGenre.Items[i]).Key == this.edited.IrregularGenre)
                 {
-                    cboGenre.SelectedIndex = i;
-                    cboGenre_SelectedIndexChanged(cboGenre, EventArgs.Empty);
+                    this.cboGenre.SelectedIndex = i;
+                    this.cboGenre_SelectedIndexChanged(this.cboGenre, EventArgs.Empty);
                     break;
                 }
             }
@@ -45,16 +45,16 @@ namespace SharpDevs.Fleksator.Edit
 
         private void bRandom_Click(object sender, EventArgs e)
         {
-            RandomAdjective();
-            Display();
+            this.RandomAdjective();
+            this.Display();
         }
 
         private void Display()
         {
-            this.textNoun.Text = edited.Root;
-            while (adj == null)
-                RandomAdjective();
-            this.textAdjective.Text = adj.Root;
+            this.textNoun.Text = this.edited.Root;
+            while (this.adj == null)
+                this.RandomAdjective();
+            this.textAdjective.Text = this.adj.Root;
 
             // cbo...
 
@@ -63,8 +63,8 @@ namespace SharpDevs.Fleksator.Edit
             foreach (InflectionCase wCase in Enum.GetValues(typeof(InflectionCase)))
             {
                 string str = String.Format("{0} {1}{2}",
-                    AdjectiveDecliner.Decliner.MakeWord(adj, edited, wCase, DecliantionNumber.Singular),
-                    NounDecliner.Decliner.MakeWord(edited, wCase, DecliantionNumber.Singular),
+                    AdjectiveDecliner.Decliner.MakeWord(this.adj, this.edited, wCase, DecliantionNumber.Singular),
+                    NounDecliner.Decliner.MakeWord(this.edited, wCase, DecliantionNumber.Singular),
                     Environment.NewLine);
 
                 this.textResult.AppendText(str);
@@ -75,8 +75,8 @@ namespace SharpDevs.Fleksator.Edit
             foreach (InflectionCase wCase in Enum.GetValues(typeof(InflectionCase)))
             {
                 string str = String.Format("{0} {1}{2}",
-                    AdjectiveDecliner.Decliner.MakeWord(adj, edited, wCase, DecliantionNumber.Plural),
-                    NounDecliner.Decliner.MakeWord(edited, wCase, DecliantionNumber.Plural),
+                    AdjectiveDecliner.Decliner.MakeWord(this.adj, this.edited, wCase, DecliantionNumber.Plural),
+                    NounDecliner.Decliner.MakeWord(this.edited, wCase, DecliantionNumber.Plural),
                     Environment.NewLine);
 
                 this.textResult.AppendText(str);
@@ -90,7 +90,7 @@ namespace SharpDevs.Fleksator.Edit
 
         void LoadGenres(ComboBox cbo, bool addUnknown)
         {
-            if (translator == null)
+            if (this.translator == null)
                 return;
 
             cbo.Items.Clear();
@@ -101,25 +101,25 @@ namespace SharpDevs.Fleksator.Edit
                 if (!addUnknown && aCase == GrammaticalGender._Unknown)
                     continue;
 
-                cbo.Items.Add(new Option<GrammaticalGender>(aCase, translator.TranslateWordGenre(aCase)));
+                cbo.Items.Add(new Option<GrammaticalGender>(aCase, this.translator.TranslateWordGenre(aCase)));
             }
         }
 
         private void cboGenre_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Option<GrammaticalGender> opt = (Option<GrammaticalGender>)cboGenre.SelectedItem;
+            Option<GrammaticalGender> opt = (Option<GrammaticalGender>) this.cboGenre.SelectedItem;
             if (opt != null)
             {
-                edited.IrregularGenre = opt.Key;
-                edited.HasIrregularGenre = edited.IrregularGenre != GrammaticalGender._Unknown;
+                this.edited.IrregularGenre = opt.Key;
+                this.edited.HasIrregularGenre = this.edited.IrregularGenre != GrammaticalGender._Unknown;
             }
             else
             {
-                edited.IrregularGenre = GrammaticalGender._Unknown;
-                edited.HasIrregularGenre = false;
+                this.edited.IrregularGenre = GrammaticalGender._Unknown;
+                this.edited.HasIrregularGenre = false;
             }
 
-            Display();
+            this.Display();
         }
     }
 }

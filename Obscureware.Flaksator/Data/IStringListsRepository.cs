@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Obscureware.Flaksator.Data
+﻿namespace Obscureware.Flaksator.Data
 {
+    using System.Collections.Generic;
+
     public interface IStringListsRepository
     {
         IEnumerable<string> GetTitles();

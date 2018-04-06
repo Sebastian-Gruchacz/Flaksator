@@ -78,7 +78,7 @@ namespace Flaksator
 #endif
 
                     if (!string.IsNullOrEmpty(line))
-                        elements.Add(line);
+                        this.elements.Add(line);
                 }
 
                 // static elements
@@ -100,7 +100,7 @@ namespace Flaksator
                         continue; // ignore
 #endif
                     if (!string.IsNullOrEmpty(line))
-                        parts.Add(line, val);
+                        this.parts.Add(line, val);
                 }
             }
             finally
@@ -126,30 +126,30 @@ namespace Flaksator
             sb.AppendLine(TitleCreator.Creator.GetRandomTitle().ToUpper());
             sb.AppendLine();
 
-            if (rnd.Next(100) > 92)
+            if (this.rnd.Next(100) > 92)
             {
                 // instrumental
-                sb.AppendFormat("({0})", parts["INSTR"]);
+                sb.AppendFormat("({0})", this.parts["INSTR"]);
             }
             else
             {
                 #region Main Part
 
-                int songElements = rnd.Next(3, 15); // max number of song parts
-                bool variousRefrains = rnd.Next(100) > 70; // specify if refrains shall be random or not...
+                int songElements = this.rnd.Next(3, 15); // max number of song parts
+                bool variousRefrains = this.rnd.Next(100) > 70; // specify if refrains shall be random or not...
 
-                string refrain = GetStanza(rnd.Next(2, 5));
-                int stanzaLength = rnd.Next(2, 5);
+                string refrain = this.GetStanza(this.rnd.Next(2, 5));
+                int stanzaLength = this.rnd.Next(2, 5);
 
                 SongPart lastPart = SongPart.Refrain;
 
                 for (int i = 1; i <= songElements; i++)
                 {
                     // let there be no 2 refrains one after one
-                    SongPart part = RandomizePart();
+                    SongPart part = this.RandomizePart();
                     if (part == lastPart)
                         while (part == SongPart.Refrain)
-                            part = RandomizePart();
+                            part = this.RandomizePart();
 
                     lastPart = part;
 
@@ -162,10 +162,10 @@ namespace Flaksator
                     {
                         case SongPart.Refrain:
                             {
-                                sb.AppendFormat("({0}){1}", parts["REF"], Environment.NewLine);
+                                sb.AppendFormat("({0}){1}", this.parts["REF"], Environment.NewLine);
 
                                 if (variousRefrains)
-                                    sb.Append(GetStanza(rnd.Next(2, 5)));
+                                    sb.Append(this.GetStanza(this.rnd.Next(2, 5)));
                                 else
                                     sb.Append(refrain);
 
@@ -175,35 +175,35 @@ namespace Flaksator
 
                         case SongPart.Stanza:
                             {
-                                sb.Append(GetStanza(stanzaLength));
+                                sb.Append(this.GetStanza(stanzaLength));
                                 sb.Append(Environment.NewLine);
                                 break;
                             }
 
                         case SongPart.Bridge:
                             {
-                                sb.AppendFormat("({0}){1}", parts["BRIDGE"], Environment.NewLine);
+                                sb.AppendFormat("({0}){1}", this.parts["BRIDGE"], Environment.NewLine);
                                 sb.Append(Environment.NewLine);
                                 break;
                             }
 
                         case SongPart.Interludium:
                             {
-                                sb.AppendFormat("({0}){1}", parts["INTER"], Environment.NewLine);
+                                sb.AppendFormat("({0}){1}", this.parts["INTER"], Environment.NewLine);
                                 sb.Append(Environment.NewLine);
                                 break;
                             }
 
                         case SongPart.Element:
                             {
-                                string ePart = this.elements[rnd.Next(0, this.elements.Count)];
-                                ePart = CapitalizeMultiline(DecodeLine(ePart));
+                                string ePart = this.elements[this.rnd.Next(0, this.elements.Count)];
+                                ePart = this.CapitalizeMultiline(this.DecodeLine(ePart));
                                 sb.AppendFormat("({0}){1}", ePart, Environment.NewLine);
                                 sb.Append(Environment.NewLine);
 
                                 // add stanza after each separator
 
-                                sb.Append(GetStanza(stanzaLength));
+                                sb.Append(this.GetStanza(stanzaLength));
                                 sb.Append(Environment.NewLine);
 
 
@@ -219,17 +219,17 @@ namespace Flaksator
                     || lastPart == SongPart.Bridge)
                 {
                     // put one more stanza after
-                    sb.Append(GetStanza(rnd.Next(2, 5)));
+                    sb.Append(this.GetStanza(this.rnd.Next(2, 5)));
                     sb.Append(Environment.NewLine);
                 }
 
                 // Ending
-                if (rnd.Next(100) > 90)
+                if (this.rnd.Next(100) > 90)
                 {
-                    sb.AppendFormat("({0}){1}", parts["END"], Environment.NewLine);
+                    sb.AppendFormat("({0}){1}", this.parts["END"], Environment.NewLine);
                     sb.Append(Environment.NewLine);
 
-                    sb.Append(GetStanza(rnd.Next(2, 5)));
+                    sb.Append(this.GetStanza(this.rnd.Next(2, 5)));
                     sb.Append(Environment.NewLine);
                 }
 
@@ -243,7 +243,7 @@ namespace Flaksator
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i <= versesCount; i++)
             {
-                sb.AppendLine(GetSongVerse());
+                sb.AppendLine(this.GetSongVerse());
             }
 
             return sb.ToString();
@@ -251,7 +251,7 @@ namespace Flaksator
 
         private SongPart RandomizePart()
         {
-            int rand = rnd.Next(100);
+            int rand = this.rnd.Next(100);
 
             if (rand < 40)
                 return SongPart.Stanza;
@@ -277,7 +277,7 @@ namespace Flaksator
             // Capiatalize first lines       
 
             // & return
-            return CapitalizeMultiline(verse);
+            return this.CapitalizeMultiline(verse);
 
         }
 

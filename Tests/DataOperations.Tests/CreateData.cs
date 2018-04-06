@@ -18,7 +18,7 @@ namespace DataOperations.Tests
         [Ignore("Build-time only test")]
         public void Fill_in_title_strings()
         {
-            using (var db = factory.CreateDatabase())
+            using (var db = this.factory.CreateDatabase())
             {
                 db.ListResources.SaveTitles(new[]
                 {
@@ -90,7 +90,7 @@ namespace DataOperations.Tests
         [Test]
         public void verify_that_some_titles_exist()
         {
-            using (var db = factory.CreateDatabase())
+            using (var db = this.factory.CreateDatabase())
             {
                 var titles = db.ListResources.GetTitles();
 
@@ -103,7 +103,7 @@ namespace DataOperations.Tests
         //[Ignore("Build-time only test")]
         public void constant_piece_transaltionsFill_in_title_strings()
         {
-            using (var db = factory.CreateDatabase())
+            using (var db = this.factory.CreateDatabase())
             {
                 var dic = new Dictionary<SongPiece, string>();
                 dic.Add(SongPiece.Stanza, "--zwrotka--");
@@ -120,7 +120,7 @@ namespace DataOperations.Tests
         [Test]
         public void verify_that_some_constant_piece_transaltions_exist()
         {
-            using (var db = factory.CreateDatabase())
+            using (var db = this.factory.CreateDatabase())
             {
                 var translations = db.DictionaryResources.GetConstantSongPieces();
 

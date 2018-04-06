@@ -11,7 +11,7 @@ namespace SharpDevs.Fleksator.IO.Implementation
 
         public IGrammaticalWordSerializer<Noun> NounSerializer
         {
-            get { return _nounSerializer; }
+            get { return this._nounSerializer; }
         }
     }
 }

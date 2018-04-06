@@ -18,8 +18,8 @@ namespace SharpDevs.Helpers.Presentation
         /// <param name="value">Text that will be displayed.</param>
         public Option(T key, string text)
         {
-            _value = text;
-            _key = key;
+            this._value = text;
+            this._key = key;
         }
     
         private T _key;
@@ -30,8 +30,8 @@ namespace SharpDevs.Helpers.Presentation
         /// </summary>
         public string Text
         {
-            get { return _value; }
-            set { _value = value; }
+            get { return this._value; }
+            set { this._value = value; }
         }
     
         /// <summary>
@@ -39,8 +39,8 @@ namespace SharpDevs.Helpers.Presentation
         /// </summary>
         public T Key
         {
-            get { return _key; }
-            set { _key = value; }
+            get { return this._key; }
+            set { this._key = value; }
         }
 
         /// <summary>

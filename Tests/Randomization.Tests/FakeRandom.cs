@@ -1,7 +1,7 @@
-using System;
-
 namespace Randomization.Tests
 {
+    using System;
+
     public class FakeRandom// : Random
     {
         private readonly int[] _fakeSequence;
@@ -13,19 +13,19 @@ namespace Randomization.Tests
             if (fakeSequence.Length == 0)
                 throw new ArgumentException(@"Argument is empty collection", nameof(fakeSequence));
 
-            _fakeSequence = fakeSequence;
-            _index = 0;
+            this._fakeSequence = fakeSequence;
+            this._index = 0;
         }
 
         public int GetNext()
         {
             try
             {
-                return _fakeSequence[_index];
+                return this._fakeSequence[this._index];
             }
             finally
             {
-                CheckIndex();
+                this.CheckIndex();
             }
         }
 
@@ -33,7 +33,7 @@ namespace Randomization.Tests
         {
             try
             {
-                int value = _fakeSequence[_index];
+                int value = this._fakeSequence[this._index];
                 if (value >= max)
                 {
                     throw new TestException(@"Value in FakeRandom sequence is greater than expected GetNext(max) boundary.");
@@ -42,7 +42,7 @@ namespace Randomization.Tests
             }
             finally
             {
-                CheckIndex();
+                this.CheckIndex();
             }
         }
 
@@ -50,7 +50,7 @@ namespace Randomization.Tests
         {
             try
             {
-                int value = _fakeSequence[_index];
+                int value = this._fakeSequence[this._index];
                 if (value < min)
                 {
                     throw new TestException(@"Value in FakeRandom sequence is lower than expected GetNext(min, max) boundary.");
@@ -63,7 +63,7 @@ namespace Randomization.Tests
             }
             finally
             {
-                CheckIndex();
+                this.CheckIndex();
             }
         }
 
@@ -71,20 +71,20 @@ namespace Randomization.Tests
         {
             try
             {
-                return (double)_fakeSequence[_index];
+                return (double) this._fakeSequence[this._index];
             }
             finally
             {
-                CheckIndex();
+                this.CheckIndex();
             }
         }
 
         private void CheckIndex()
         {
-            _index++;
-            if (_index >= _fakeSequence.Length)
+            this._index++;
+            if (this._index >= this._fakeSequence.Length)
             {
-                _index = 0;
+                this._index = 0;
             }
         }
     }

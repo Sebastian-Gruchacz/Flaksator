@@ -62,7 +62,7 @@ namespace Flaksator
                         continue; // entry is commented out
 
                     if (!string.IsNullOrEmpty(line))
-                        verses.Add(line);
+                        this.verses.Add(line);
                 }
             }
             finally
@@ -80,9 +80,9 @@ namespace Flaksator
 
         public string GetRandomVerse()
         {
-            string verse = this.verses[rnd.Next(0, this.verses.Count)];
+            string verse = this.verses[this.rnd.Next(0, this.verses.Count)];
 
-            return DecodeLine(verse);
+            return this.DecodeLine(verse);
         }
 
 

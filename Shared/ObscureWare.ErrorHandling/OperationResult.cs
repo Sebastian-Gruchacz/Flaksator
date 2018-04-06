@@ -1,28 +1,28 @@
-﻿using System;
-
-namespace ObscureWare.ErrorHandling
+﻿namespace ObscureWare.ErrorHandling
 {
+    using System;
+
     public struct OperationResult<T>
     {
         private readonly T _value;
-        internal readonly Fail _fail;
+        internal readonly Fail Fail;
 
         public OperationResult(T value)
         {
-            _value = value;
-            _fail = null;
+            this._value = value;
+            this.Fail = null;
         }
 
         private OperationResult(TrackedFail fail)
         {
-            _value = default(T);
-            _fail = fail;
+            this._value = default(T);
+            this.Fail = fail;
         }
 
         private OperationResult(Fail fail)
         {
-            _value = default(T);
-            _fail = fail;
+            this._value = default(T);
+            this.Fail = fail;
         }
 
         public string ErrorMessage
@@ -31,10 +31,10 @@ namespace ObscureWare.ErrorHandling
             {
                 if (this.Success)
                 {
-                    throw new InvalidOperationException(@"Trying to read ErrorMessage from successfull OperationResult object.");
+                    throw new InvalidOperationException(@"Trying to read ErrorMessage from successful OperationResult object.");
                 }
 
-                return _fail.ErrorMessage;  
+                return this.Fail.ErrorMessage;  
             }
         }
 
@@ -44,10 +44,10 @@ namespace ObscureWare.ErrorHandling
             {
                 if (this.Success)
                 {
-                    throw new InvalidOperationException(@"Trying to read StackTrace from successfull OperationResult object.");
+                    throw new InvalidOperationException(@"Trying to read StackTrace from successful OperationResult object.");
                 }
 
-                return _fail.StackTrace ?? @"# NO STACK TRACE STORED #";
+                return this.Fail.StackTrace ?? @"# NO STACK TRACE STORED #";
             }
         }
 
@@ -57,27 +57,18 @@ namespace ObscureWare.ErrorHandling
             {
                 if (this.Success)
                 {
-                    throw new InvalidOperationException(@"Trying to read Exception from successfull OperationResult object.");
+                    throw new InvalidOperationException(@"Trying to read Exception from successful OperationResult object.");
                 }
 
-                return _fail.Exception;
+                return this.Fail.Exception;
             }
         }
 
-        public bool Failed
-        {
-            get { return _fail != null; }
-        }
+        public bool Failed => this.Fail != null;
 
-        public bool Success
-        {
-            get { return _fail == null; }
-        }
+        public bool Success => this.Fail == null;
 
-        public ErrorCodes ErrorCode
-        {
-            get { return _fail?.ErrorCode ?? ErrorCodes.Success; }
-        }
+        public ErrorCodes ErrorCode => this.Fail?.ErrorCode ?? ErrorCodes.Success;
 
         public T Value
         {
@@ -88,7 +79,7 @@ namespace ObscureWare.ErrorHandling
                     throw new InvalidOperationException("Trying to read value from failed OperationResult object");
                 }
 
-                return _value;
+                return this._value;
             }
         }
 
@@ -112,7 +103,7 @@ namespace ObscureWare.ErrorHandling
             return new OperationResult<T>(fail);
         }
 
-        // SMG: This does not work unfortunatelly... :anger:
+        // SMG: This does not work unfortunately... :anger:
         public static implicit operator Fail(OperationResult<T> value)
         {
             if (value.Success)
@@ -120,7 +111,7 @@ namespace ObscureWare.ErrorHandling
                 throw new InvalidOperationException(@"Only failing OperationResult objects can be passed further.");
             }
 
-            return value._fail;
+            return value.Fail;
         }
     }
 }

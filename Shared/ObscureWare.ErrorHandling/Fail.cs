@@ -6,30 +6,30 @@ namespace ObscureWare.ErrorHandling
     {
         public Fail(string errorMessage, ErrorCodes errorCode = ErrorCodes.GenericFailure)
         {
-            ErrorCode = errorCode;
-            ErrorMessage = errorMessage;
+            this.ErrorCode = errorCode;
+            this.ErrorMessage = errorMessage;
         }
 
         public Fail(ErrorCodes errorCode, string formatString, params object[] args)
         {
             if (formatString == null) throw new ArgumentNullException(nameof(formatString));
 
-            ErrorCode = errorCode;
-            ErrorMessage = string.Format(formatString, (object[])args);
+            this.ErrorCode = errorCode;
+            this.ErrorMessage = string.Format(formatString, (object[])args);
         }
 
         public Fail(string message, Exception exception, ErrorCodes errorCode = ErrorCodes.GenericFailure) : this(message)
         {
-            ErrorCode = errorCode;
-            Exception = exception;
-            StackTrace = exception.StackTrace;
+            this.ErrorCode = errorCode;
+            this.Exception = exception;
+            this.StackTrace = exception.StackTrace;
         }
 
         public Fail(Exception exception, ErrorCodes errorCode = ErrorCodes.GenericFailure) : this(exception.Message)
         {
-            ErrorCode = errorCode;
-            Exception = exception;
-            StackTrace = exception.StackTrace;
+            this.ErrorCode = errorCode;
+            this.Exception = exception;
+            this.StackTrace = exception.StackTrace;
         }
 
         public string ErrorMessage { get; private set; }

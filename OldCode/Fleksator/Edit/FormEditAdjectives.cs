@@ -14,7 +14,7 @@ namespace SharpDevs.Fleksator.Edit
     {
         public FormEditAdjectives()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void FormEditAdjectives_Load(object sender, EventArgs e)
@@ -26,40 +26,40 @@ namespace SharpDevs.Fleksator.Edit
                     WordCategories.Categories.AdjectiveCategories[key]));
             }
 
-            FilterAll();
+            this.FilterAll();
         }
 
         private bool editing = false;
 
         private void FilterAll()
         {
-            editing = true;
+            this.editing = true;
 
             for (int i = 0; i < this.chlistCategories.Items.Count; i++)
                 this.chlistCategories.SetItemChecked(i, true);
 
-            editing = false;
+            this.editing = false;
 
-            chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
+            this.chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
         }
 
         private void chlistCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            DoFilterAdjectives();
+            this.DoFilterAdjectives();
         }
 
         Option<Adjective> selected = null;
 
         private void listAdjectives_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selected = (Option<Adjective>)listAdjectives.SelectedItem;
+            this.selected = (Option<Adjective>) this.listAdjectives.SelectedItem;
 
-            if (selected != null)
+            if (this.selected != null)
             {
-                this.controlEditAdjective1.EditAdjective(selected.Key);
+                this.controlEditAdjective1.EditAdjective(this.selected.Key);
             }
             else
                 this.controlEditAdjective1.EditAdjective(null);
@@ -67,15 +67,15 @@ namespace SharpDevs.Fleksator.Edit
 
         private void checkOnlyLevelled_CheckedChanged(object sender, EventArgs e)
         {
-            chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
+            this.chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            DoFilterAdjectives();
+            this.DoFilterAdjectives();
         }
 
         private void DoFilterAdjectives()
@@ -86,12 +86,12 @@ namespace SharpDevs.Fleksator.Edit
                 if (this.chlistCategories.GetItemChecked(i))
                     usedCategories.Add(((Option<int>)this.chlistCategories.Items[i]).Key);
 
-            bool onlyLevelled = checkOnlyLevelled.Checked;
+            bool onlyLevelled = this.checkOnlyLevelled.Checked;
             string maskText = this.textBox1.Text.ToLower();
             bool maskFilter = maskText.Length > 0;
 
             // Filter out adjectives
-            listAdjectives.Items.Clear();
+            this.listAdjectives.Items.Clear();
             foreach (Adjective adj in AdjectiveCollection.Collection.Adjectives)
             {
                 // skip Adjectives that cannot be levelled when user specifies so
@@ -116,7 +116,7 @@ namespace SharpDevs.Fleksator.Edit
 
                 if (validCat)
                 {
-                    listAdjectives.Items.Add(new Option<Adjective>
+                    this.listAdjectives.Items.Add(new Option<Adjective>
                         (adj, adj.Root));
                 }
             }

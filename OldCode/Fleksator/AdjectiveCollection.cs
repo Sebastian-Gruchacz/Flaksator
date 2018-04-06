@@ -38,7 +38,7 @@ namespace SharpDevs.Fleksator
         private List<Adjective> adjectives = new List<Adjective>();
         public List<Adjective> Adjectives
         {
-            get { return adjectives; }
+            get { return this.adjectives; }
         }
 
         #region Loading & Saving
@@ -87,7 +87,7 @@ namespace SharpDevs.Fleksator
 
         public Adjective GetRandomAdjective()
         {
-            return this.adjectives[rnd.Next(0, this.adjectives.Count)];
+            return this.adjectives[this.rnd.Next(0, this.adjectives.Count)];
         }
     }
 }

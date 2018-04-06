@@ -13,8 +13,8 @@ namespace SharpDevs.Fleksator
         /// </summary>
         public DecliantionNumber DecliantionNumber
         {
-            get { return amount; }
-            set { amount = value; }
+            get { return this.amount; }
+            set { this.amount = value; }
         }
 
         private InflectionCase inflectionCase;
@@ -23,16 +23,16 @@ namespace SharpDevs.Fleksator
         /// </summary>
         public InflectionCase InflectionCase
         {
-            get { return inflectionCase; }
-            set { inflectionCase = value; }
+            get { return this.inflectionCase; }
+            set { this.inflectionCase = value; }
         }
 
         private string root;
 
         public string Text
         {
-            get { return root; }
-            set { root = value; }
+            get { return this.root; }
+            set { this.root = value; }
         }
 
         public WordToken()

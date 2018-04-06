@@ -1,7 +1,7 @@
-using System;
-
 namespace Randomization.Tests
 {
+    using System;
+
     [Serializable]
     internal class TestException : Exception
     {

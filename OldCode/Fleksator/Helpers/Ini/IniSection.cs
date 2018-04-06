@@ -9,23 +9,23 @@ namespace SharpDevs.Helpers.Ini
     {
         public IniSection(string name)
         {
-            _name = name;
-            _keys = new ChangeList<IniKey>();
-            _keys.OnChange += new EventHandler(_keys_OnChange);
-            _isComment = false;
+            this._name = name;
+            this._keys = new ChangeList<IniKey>();
+            this._keys.OnChange += new EventHandler(this._keys_OnChange);
+            this._isComment = false;
         }
 
         void _keys_OnChange(object sender, EventArgs e)
         {
-            SetChanged();
+            this.SetChanged();
         }
 
         internal event EventHandler OnChange;
 
         protected void SetChanged()
         {
-            if (OnChange != null)
-                OnChange(this, new EventArgs());
+            if (this.OnChange != null)
+                this.OnChange(this, new EventArgs());
         }
 
         private string _name;
@@ -34,22 +34,22 @@ namespace SharpDevs.Helpers.Ini
 
         public bool IsComment
         {
-            get { return _isComment; }
+            get { return this._isComment; }
         }
 
         public List<IniKey> Keys
         {
-            get { return _keys; }
+            get { return this._keys; }
         }
 
         public string Name
         {
-            get { return _name; }
+            get { return this._name; }
             set
             {
-                _name = value;
-                _isComment = (_name.StartsWith(";"));
-                SetChanged();
+                this._name = value;
+                this._isComment = (this._name.StartsWith(";"));
+                this.SetChanged();
             }
         }
 
@@ -66,13 +66,13 @@ namespace SharpDevs.Helpers.Ini
             }
             set 
             {
-                foreach (IniKey key in _keys)
+                foreach (IniKey key in this._keys)
                     if (!key.IsComment && key.Name == keyName)
                     {
-                        _keys.Remove(key);
-                        key.OnChange -= new EventHandler(_keys_OnChange);
-                        _keys.Add(value);
-                        value.OnChange += new EventHandler(_keys_OnChange);
+                        this._keys.Remove(key);
+                        key.OnChange -= new EventHandler(this._keys_OnChange);
+                        this._keys.Add(value);
+                        value.OnChange += new EventHandler(this._keys_OnChange);
                     }
                 // SetChanged();    - no need here, will be executed by remove, add        
             }
@@ -80,7 +80,7 @@ namespace SharpDevs.Helpers.Ini
 
         internal void WriteToStream(StreamWriter stream, bool writeKeys)
         {
-            if (!_isComment)
+            if (!this._isComment)
             {
                 stream.WriteLine(string.Format("[{0}]", this._name));
                 if (writeKeys)

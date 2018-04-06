@@ -1,8 +1,9 @@
-﻿using System;
-using NUnit.Framework;
-
-namespace ObscureWare.ErrorHandling.Tests
+﻿namespace ObscureWare.ErrorHandling.Tests
 {
+    using System;
+
+    using NUnit.Framework;
+
     public class StructOperationResultTests
     {
         private readonly BusinessLogicRepository _testedInstance;
@@ -10,14 +11,14 @@ namespace ObscureWare.ErrorHandling.Tests
 
         public StructOperationResultTests()
         {
-            _testedInstance = new BusinessLogicRepository();
-            _outerInstance = new ExternalBusinessLogicRepository(_testedInstance);
+            this._testedInstance = new BusinessLogicRepository();
+            this._outerInstance = new ExternalBusinessLogicRepository(this._testedInstance);
         }
 
         [Test]
         public void ProperlyExecutedMethodShallReturnValidResult()
         {
-            var result = _testedInstance.SomeSuccessfullReadOperation();
+            var result = this._testedInstance.SomeSuccessfullReadOperation();
             Assert.NotNull(result);
             Assert.IsTrue(result.Success);
             Assert.IsFalse(result.Failed);
@@ -28,28 +29,28 @@ namespace ObscureWare.ErrorHandling.Tests
         [Test]
         public void ResultOfProperlyExecutedMethodShallThrowExceptionIfTryingToReadErrorMessage()
         {
-            var result = _testedInstance.SomeSuccessfullReadOperation();
+            var result = this._testedInstance.SomeSuccessfullReadOperation();
             Assert.Throws<InvalidOperationException>(() => Console.WriteLine(result.ErrorMessage));
         }
 
         [Test]
         public void ResultOfProperlyExecutedMethodShallThrowExceptionIfTryingToReadStackTrace()
         {
-            var result = _testedInstance.SomeSuccessfullReadOperation();
+            var result = this._testedInstance.SomeSuccessfullReadOperation();
             Assert.Throws<InvalidOperationException>(() => Console.WriteLine(result.StackTrace));
         }
 
         [Test]
         public void ResultOfProperlyExecutedMethodShallThrowExceptionIfTryingToReadException()
         {
-            var result = _testedInstance.SomeSuccessfullReadOperation();
+            var result = this._testedInstance.SomeSuccessfullReadOperation();
             Assert.Throws<InvalidOperationException>(() => Console.WriteLine(result.Exception));
         }
 
         [Test]
         public void SimplyFailingMethodShallReturnFailedResultWithProperMessage()
         {
-            var result = _testedInstance.SomeFailingReadOperation();
+            var result = this._testedInstance.SomeFailingReadOperation();
             Assert.NotNull(result);
             Assert.IsTrue(result.Failed);
             Assert.IsFalse(result.Success);
@@ -61,14 +62,14 @@ namespace ObscureWare.ErrorHandling.Tests
         [Test]
         public void SimplyFailingMethodShallThrowExceptionWhenTryingToAccessValue()
         {
-            var result = _testedInstance.SomeFailingReadOperation();
+            var result = this._testedInstance.SomeFailingReadOperation();
             Assert.Throws<InvalidOperationException>(() => Console.WriteLine(result.Value));
         }
 
         [Test]
         public void ExceptionallyFailingMethodShallReturnFailedResultWithProperMessage()
         {
-            var result = _testedInstance.SomeExceptionalReadOperation();
+            var result = this._testedInstance.SomeExceptionalReadOperation();
             Assert.NotNull(result);
             Assert.IsTrue(result.Failed);
             Assert.IsFalse(result.Success);
@@ -81,14 +82,14 @@ namespace ObscureWare.ErrorHandling.Tests
         [Test]
         public void ExceptionallyFailingMethodShallThrowExceptionWhenTryingToAccessValue()
         {
-            var result = _testedInstance.SomeExceptionalReadOperation();
+            var result = this._testedInstance.SomeExceptionalReadOperation();
             Assert.Throws<InvalidOperationException>(() => Console.WriteLine(result.Value));
         }
 
         [Test]
         public void ProperSuccessfullHandling()
         {
-            var result = _testedInstance.SomeSuccessfullReadOperation();
+            var result = this._testedInstance.SomeSuccessfullReadOperation();
             if (result.Success)
             {
                 Console.WriteLine(result.Value);
@@ -98,7 +99,7 @@ namespace ObscureWare.ErrorHandling.Tests
         [Test]
         public void ProperFailureHandling()
         {
-            var result = _testedInstance.SomeFailingReadOperation();
+            var result = this._testedInstance.SomeFailingReadOperation();
             if (result.Failed)
             {
                 Console.WriteLine(result.ErrorMessage);
@@ -108,7 +109,7 @@ namespace ObscureWare.ErrorHandling.Tests
         [Test]
         public void PassedSuccessfullResultShallBeEqualToOriginal()
         {
-            var result = _outerInstance.PassSuccessfullMergedOperation();
+            var result = this._outerInstance.PassSuccessfullMergedOperation();
             Assert.NotNull(result);
             Assert.IsTrue(result.Success);
             Assert.IsFalse(result.Failed);
@@ -119,7 +120,7 @@ namespace ObscureWare.ErrorHandling.Tests
         [Test]
         public void PassedFailingResultShallBeEqualToOriginal()
         {
-            var result = _outerInstance.PassFailedMergedOperation();
+            var result = this._outerInstance.PassFailedMergedOperation();
             Assert.NotNull(result);
             Assert.IsTrue(result.Failed);
             Assert.IsFalse(result.Success);

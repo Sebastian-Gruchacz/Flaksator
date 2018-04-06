@@ -13,7 +13,7 @@ namespace SharpDevs.Fleksator.Edit.Controls
     {
         public ControlCaseEdit()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private EnumTranslator translator = EnumTranslator.GetTranslator();
@@ -21,22 +21,22 @@ namespace SharpDevs.Fleksator.Edit.Controls
         private InflectionCase aCase;
         public InflectionCase Case
         {
-            get { return aCase; }
+            get { return this.aCase; }
             set
             {
-                aCase = value;
+                this.aCase = value;
 
-                if (translator != null)
-                    lCaseName.Text = translator.TranslateWordCase(aCase);
+                if (this.translator != null)
+                    this.lCaseName.Text = this.translator.TranslateWordCase(this.aCase);
                 else
-                    lCaseName.Text = aCase.ToString();
+                    this.lCaseName.Text = this.aCase.ToString();
             }
         }
 
         public string Value
         {
-            get { return eText.Text; }
-            set { eText.Text = value; }
+            get { return this.eText.Text; }
+            set { this.eText.Text = value; }
         }
     }
 }

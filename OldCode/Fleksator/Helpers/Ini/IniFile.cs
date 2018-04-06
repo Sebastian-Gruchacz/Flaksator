@@ -11,13 +11,13 @@ namespace SharpDevs.Helpers
     {
         public IniFile()
         {
-            _sections = new ChangeList<IniSection>();
-            _sections.OnChange += new EventHandler(_sections_OnChange);
+            this._sections = new ChangeList<IniSection>();
+            this._sections.OnChange += new EventHandler(this._sections_OnChange);
         }
 
         void _sections_OnChange(object sender, EventArgs e)
         {
-            SetChanged();
+            this.SetChanged();
         }
 
         private ChangeList<IniSection> _sections;
@@ -25,17 +25,17 @@ namespace SharpDevs.Helpers
 
         public bool Changed
         {
-            get { return changed; }
+            get { return this.changed; }
         }
 
         internal void SetChanged()
         {
-            changed = true;
+            this.changed = true;
         }
 
         public ChangeList<IniSection> Sections
         {
-            get { return _sections; }
+            get { return this._sections; }
         }
 
         public IniSection this[string sectionName]
@@ -66,7 +66,7 @@ namespace SharpDevs.Helpers
 
         public string GetKeyValue(string sectionName, string keyName)
         {
-            IniKey key = GetKey(sectionName, keyName);
+            IniKey key = this.GetKey(sectionName, keyName);
             if (key != null && !key.Multiline)
                 return key.Value;
             else
@@ -75,7 +75,7 @@ namespace SharpDevs.Helpers
 
         public string GetKeyValue(string sectionName, string keyName, int lineIndex)
         {
-            IniKey key = GetKey(sectionName, keyName);
+            IniKey key = this.GetKey(sectionName, keyName);
             if (key != null && key.Multiline)
             {
                 if (key.Values.Length > lineIndex)
@@ -104,13 +104,13 @@ namespace SharpDevs.Helpers
                 key = new IniKey();
                 key.Name = keyName;
                 section.Keys.Add(key);
-                key.OnChange += new EventHandler(_sections_OnChange);
+                key.OnChange += new EventHandler(this._sections_OnChange);
             }
 
             // Set new Value
             key.Value = value;
 
-            SetChanged();
+            this.SetChanged();
         }
 
         public void SetKeyValuesDimension(string sectionName, string keyName, int newDimension)
@@ -129,7 +129,7 @@ namespace SharpDevs.Helpers
             {
                 key = new IniKey();
                 key.Name = keyName;
-                key.OnChange += new EventHandler(_sections_OnChange);
+                key.OnChange += new EventHandler(this._sections_OnChange);
                 section.Keys.Add(key);
             }
 
@@ -157,7 +157,7 @@ namespace SharpDevs.Helpers
             // Keep new values array in Key
             key.Values = array;
 
-            SetChanged();
+            this.SetChanged();
         }
 
         public void SetKeyValue(string sectionName, string keyName, int lineIndex, string value)
@@ -176,7 +176,7 @@ namespace SharpDevs.Helpers
             {
                 key = new IniKey();
                 key.Name = keyName;
-                key.OnChange += new EventHandler(_sections_OnChange);
+                key.OnChange += new EventHandler(this._sections_OnChange);
                 section.Keys.Add(key);
             }
 
@@ -209,7 +209,7 @@ namespace SharpDevs.Helpers
             // Keep new values array in Key
             key.Values = array;
 
-            SetChanged();
+            this.SetChanged();
         }
 
         public void DeleteKey(string sectionName, string keyName)
@@ -229,7 +229,7 @@ namespace SharpDevs.Helpers
                 key.OnChange += null;
             }
 
-            SetChanged();
+            this.SetChanged();
         }
 
         public void DeleteSection(string sectionName)
@@ -238,10 +238,10 @@ namespace SharpDevs.Helpers
             if (section == null)
                 return; // no section, no deletion
 
-            _sections.Remove(section);
-            section.OnChange -= new EventHandler(_sections_OnChange);;
+            this._sections.Remove(section);
+            section.OnChange -= new EventHandler(this._sections_OnChange);;
 
-            SetChanged();
+            this.SetChanged();
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace SharpDevs.Helpers
         /// <param name="stream"></param>
         public void Load(StreamReader stream)
         {
-            _sections.Clear();
+            this._sections.Clear();
             string line = null;
 
             line = stream.ReadLine();
@@ -263,8 +263,8 @@ namespace SharpDevs.Helpers
                     IniSection section = IniSection.FromStream(ref line, stream);
                     if (section != null)
                     {
-                        _sections.Add(section);
-                        section.OnChange += new EventHandler(_sections_OnChange);
+                        this._sections.Add(section);
+                        section.OnChange += new EventHandler(this._sections_OnChange);
                     }
                 }
                 else
@@ -276,7 +276,7 @@ namespace SharpDevs.Helpers
                 }
             }
 
-            changed = false;
+            this.changed = false;
         }
 
         public void LoadFromFile(string filePath)
@@ -299,7 +299,7 @@ namespace SharpDevs.Helpers
                 section.WriteToStream(stream, true);
             }
 
-            changed = false;
+            this.changed = false;
         }
 
         public void SaveToFile(string filePath)

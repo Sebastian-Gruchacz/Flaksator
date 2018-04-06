@@ -6,14 +6,17 @@ namespace ObscureWare.Flex
     public enum AdjectiveLevel
     {
         _Unknown,
+
         /// <summary>
         /// Równy
         /// </summary>
         Equal,
+
         /// <summary>
         /// Wy¿szy
         /// </summary>
         Higher,
+
         /// <summary>
         /// Najwy¿szy
         /// </summary>

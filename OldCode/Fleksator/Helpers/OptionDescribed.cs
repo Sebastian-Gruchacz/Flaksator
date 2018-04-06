@@ -14,7 +14,7 @@ namespace SharpDevs.Helpers.Presentation
         public OptionDescribed(T value, string displayedText, string description)
             : base(value, displayedText)
         {
-            desc = description;
+            this.desc = description;
         }
 
         private string desc;
@@ -23,8 +23,8 @@ namespace SharpDevs.Helpers.Presentation
         /// </summary>
         public string Description
         {
-            get { return desc; }
-            set { desc = value; }
+            get { return this.desc; }
+            set { this.desc = value; }
         }
 
     }

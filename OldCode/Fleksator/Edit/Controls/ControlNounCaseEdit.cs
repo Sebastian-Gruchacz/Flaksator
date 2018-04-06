@@ -13,17 +13,17 @@ namespace SharpDevs.Fleksator.Edit.Controls
     {
         public ControlNounCaseEdit()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private string[] postFixes;
 
         public string[] PostFixes
         {
-            get { return postFixes; }
+            get { return this.postFixes; }
             set
             {
-                postFixes = value;
+                this.postFixes = value;
 
                 // remove buttons
                 Control[] ctrls = new Control[this.Controls.Count];
@@ -35,10 +35,10 @@ namespace SharpDevs.Fleksator.Edit.Controls
                     this.Controls.Remove(ctrl);
                 }
 
-                if (postFixes.Length > 1)
+                if (this.postFixes.Length > 1)
                 {
                     int pos = 1;
-                    foreach (string postFix in postFixes)
+                    foreach (string postFix in this.postFixes)
                     {
                         Button posButton = new Button();
                         posButton.FlatStyle = FlatStyle.Popup;
@@ -48,7 +48,7 @@ namespace SharpDevs.Fleksator.Edit.Controls
                         posButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
                         posButton.Font = new Font(posButton.Font.FontFamily, (float)8);
                         posButton.Text = postFix;
-                        posButton.Click += new EventHandler(posButton_Click);
+                        posButton.Click += new EventHandler(this.posButton_Click);
                         this.Controls.Add(posButton);
                         posButton.Top = 0; // CaseName.Top;
                         posButton.Left = this.Width - (pos + posButton.Width);
@@ -67,18 +67,18 @@ namespace SharpDevs.Fleksator.Edit.Controls
                     break;
                 }
 
-            if (PostfixButtonPressed != null)
-                PostfixButtonPressed(this, EventArgs.Empty);
+            if (this.PostfixButtonPressed != null)
+                this.PostfixButtonPressed(this, EventArgs.Empty);
         }
 
         private int selectedPostfixIndex;
 
         public int PostFixIndex
         {
-            get { return selectedPostfixIndex; }
+            get { return this.selectedPostfixIndex; }
             set
             {
-                selectedPostfixIndex = value;
+                this.selectedPostfixIndex = value;
                 foreach (Control ctrl in this.Controls)
                 {
                     if (!(ctrl is Button) || ctrl.Name == "bEqual")
@@ -86,8 +86,8 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
                     Button b = (Button)ctrl;
 
-                    if (selectedPostfixIndex < this.postFixes.Length &&
-                        b.Text == this.postFixes[selectedPostfixIndex])
+                    if (this.selectedPostfixIndex < this.postFixes.Length &&
+                        b.Text == this.postFixes[this.selectedPostfixIndex])
                         b.FlatStyle = FlatStyle.Standard;
                     else
                         b.FlatStyle = FlatStyle.Popup;
@@ -104,8 +104,8 @@ namespace SharpDevs.Fleksator.Edit.Controls
         /// </summary>
         public DecliantionNumber DecliantionNumber
         {
-            get { return amount; }
-            set { amount = value; }
+            get { return this.amount; }
+            set { this.amount = value; }
         }
 
         private InflectionCase aCase;
@@ -114,8 +114,8 @@ namespace SharpDevs.Fleksator.Edit.Controls
         /// </summary>
         public InflectionCase InflectionCase
         {
-            get { return aCase; }
-            set { aCase = value; }
+            get { return this.aCase; }
+            set { this.aCase = value; }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -126,8 +126,8 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
         private void ControlNounCaseEdit_SizeChanged(object sender, EventArgs e)
         {
-            this.bEqual.Left = this.ClientSize.Width - bEqual.Width - 1;
-            this.eText.Width = this.ClientSize.Width - (this.eText.Left + bEqual.Width + 2);
+            this.bEqual.Left = this.ClientSize.Width - this.bEqual.Width - 1;
+            this.eText.Width = this.ClientSize.Width - (this.eText.Left + this.bEqual.Width + 2);
         }
 
 

@@ -25,7 +25,7 @@ namespace SharpDevs.Fleksator.Grammar
         public string GetForm(GrammaticalGender genre, InflectionCase aCase, DecliantionNumber amount, AdjectiveLevel level)
         {
             AdjectiveWordToken token = new AdjectiveWordToken(null, aCase, genre, amount, level);
-            foreach (AdjectiveWordToken tok in Irregulars)
+            foreach (AdjectiveWordToken tok in this.Irregulars)
                 if (tok.Is(token))
                     return tok.Text;
 
@@ -125,7 +125,7 @@ namespace SharpDevs.Fleksator.Grammar
                             case '$':
                             {
                                 string cats = str.Substring(1);
-                                Categories.Clear();
+                                this.Categories.Clear();
                                 if (!string.IsNullOrEmpty(cats))
                                 {
                                     string[] arr = cats.Split(',');
@@ -133,8 +133,8 @@ namespace SharpDevs.Fleksator.Grammar
                                     {
                                         int id = int.Parse(catId);
 
-                                        if (!Categories.Contains(id))
-                                            Categories.Add(id);
+                                        if (!this.Categories.Contains(id))
+                                            this.Categories.Add(id);
                                     }
 
                                 }

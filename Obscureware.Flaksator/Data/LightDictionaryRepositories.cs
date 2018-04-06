@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using LiteDB;
-using ObscureWare.DocumentDatabase;
-
-namespace Obscureware.Flaksator.Data
+﻿namespace Obscureware.Flaksator.Data
 {
+    using System.Collections.Generic;
+
+    using LiteDB;
+
+    using ObscureWare.DocumentDatabase;
+
     internal class LightDictionaryRepositories : IDictionaryRepositories
     {
         private readonly LiteDatabase _db;
-        private BaseDictionaryRepository<SongPiece, string> _songPiecesRepository;
+        private readonly BaseDictionaryRepository<SongPiece, string> _songPiecesRepository;
         private const string SONG_PIECES_ID = @"SONG_PIECES";
 
         public LightDictionaryRepositories(LiteDatabase db)
         {
-            _db = db;
-            _songPiecesRepository = new BaseDictionaryRepository<SongPiece, string>(_db);
+            this._db = db;
+            this._songPiecesRepository = new BaseDictionaryRepository<SongPiece, string>(this._db);
         }
 
         public Dictionary<SongPiece, string> GetConstantSongPieces()
         {
-            return _songPiecesRepository.GetDictionary(SONG_PIECES_ID);
+            return this._songPiecesRepository.GetDictionary(SONG_PIECES_ID);
         }
 
         public void SaveConstantSongPieces(Dictionary<SongPiece, string> dictionary)
         {
-            _songPiecesRepository.SaveDictionary(SONG_PIECES_ID, dictionary);
+            this._songPiecesRepository.SaveDictionary(SONG_PIECES_ID, dictionary);
         }
     }
 }

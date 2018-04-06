@@ -88,7 +88,7 @@ namespace Flaksator
                 else
                 {
                     // this is normal word
-                    results[i] = Decode(code);
+                    results[i] = this.Decode(code);
                 }
             }
 

@@ -13,8 +13,8 @@ namespace ObscureWare.DocumentDatabase
 
         public DictionaryWrapper(string key, IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
-            Key = key;
-            Items = items.ToArray();
+            this.Key = key;
+            this.Items = items.ToArray();
         }
 
         [BsonId]

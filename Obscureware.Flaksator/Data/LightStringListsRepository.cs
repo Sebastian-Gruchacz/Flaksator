@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using LiteDB;
-using ObscureWare.DocumentDatabase;
-
-namespace Obscureware.Flaksator.Data
+﻿namespace Obscureware.Flaksator.Data
 {
+    using System.Collections.Generic;
+
+    using LiteDB;
+
+    using ObscureWare.DocumentDatabase;
+
     internal class LightStringListsRepository : BaseListRepository,
         IStringListsRepository
     {
@@ -17,24 +19,24 @@ namespace Obscureware.Flaksator.Data
 
         public IEnumerable<string> GetTitles()
         {
-            return GetStrings(TITLES);
+            return this.GetStrings(TITLES);
         }
 
 
 
         public IEnumerable<string> GetTitleExtenders()
         {
-            return GetStrings(TITLE_EXTENDERS);
+            return this.GetStrings(TITLE_EXTENDERS);
         }
 
         public void SaveTitles(IEnumerable<string> titles)
         {
-            SaveStrings(TITLES, titles);
+            this.SaveStrings(TITLES, titles);
         }
 
         public void SaveTitleExtenders(IEnumerable<string> titleExtenders)
         {
-            SaveStrings(TITLE_EXTENDERS, titleExtenders);
+            this.SaveStrings(TITLE_EXTENDERS, titleExtenders);
         }
 
         

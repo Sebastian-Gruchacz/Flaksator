@@ -15,7 +15,7 @@ namespace SharpDevs.Fleksator.Edit
     {
         public FormEditNouns()
         {
-            InitializeComponent();            
+            this.InitializeComponent();            
         }
 
         private bool editing = false;
@@ -25,7 +25,7 @@ namespace SharpDevs.Fleksator.Edit
         private void FormEditNouns_Load(object sender, EventArgs e)
         {
             // workaround - let it work
-            _grammarSerializers = new GrammarSerializersFactory().GetOldSerializers();
+            this._grammarSerializers = new GrammarSerializersFactory().GetOldSerializers();
 
             this.chlistCategories.Items.Clear();
             foreach (int key in WordCategories.Categories.NounCategories.Keys)
@@ -34,27 +34,27 @@ namespace SharpDevs.Fleksator.Edit
                     WordCategories.Categories.NounCategories[key]));
             }
 
-            FilterAll();
+            this.FilterAll();
         }
 
         private void FilterAll()
         {
-            editing = true;
+            this.editing = true;
 
             for (int i = 0; i < this.chlistCategories.Items.Count; i++)
                 this.chlistCategories.SetItemChecked(i, true);
 
-            editing = false;
+            this.editing = false;
 
-            chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
+            this.chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
         }
 
         private void chlistCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            DoFilterNouns();
+            this.DoFilterNouns();
         }
 
         Noun selectedNoun = null;
@@ -62,31 +62,31 @@ namespace SharpDevs.Fleksator.Edit
 
         private void listNouns_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            Option<Noun> selected = (Option<Noun>)listNouns.SelectedItem;
+            Option<Noun> selected = (Option<Noun>) this.listNouns.SelectedItem;
 
             if (selected != null)
             {
-                if (selectedNoun != null && tmp != null)
+                if (this.selectedNoun != null && this.tmp != null)
                 {
                     // save changes
-                    selectedNoun.AnalyzeLine(tmp.WriteNoun());
+                    this.selectedNoun.AnalyzeLine(this.tmp.WriteNoun());
 
                     // refresh display correctly   
-                    int indx = listNouns.SelectedIndex;
-                    editing = true;
-                    DoFilterNouns();                  
-                    listNouns.SelectedIndex = indx;
-                    editing = false;
+                    int indx = this.listNouns.SelectedIndex;
+                    this.editing = true;
+                    this.DoFilterNouns();
+                    this.listNouns.SelectedIndex = indx;
+                    this.editing = false;
                 }
 
-                selectedNoun = selected.Key;
+                this.selectedNoun = selected.Key;
 
-                tmp = _grammarSerializers.NounSerializer.Load(_grammarSerializers.NounSerializer.Write(selectedNoun)); // clone...
+                this.tmp = this._grammarSerializers.NounSerializer.Load(this._grammarSerializers.NounSerializer.Write(this.selectedNoun)); // clone...
 
-                this.controlEditNoun.EditNoun(tmp);
+                this.controlEditNoun.EditNoun(this.tmp);
 
             }
             else
@@ -95,10 +95,10 @@ namespace SharpDevs.Fleksator.Edit
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            DoFilterNouns();
+            this.DoFilterNouns();
         }
 
         private void DoFilterNouns()
@@ -113,7 +113,7 @@ namespace SharpDevs.Fleksator.Edit
             bool maskFilter = maskText.Length > 0;
 
             // Filter out adjectives
-            listNouns.Items.Clear();
+            this.listNouns.Items.Clear();
             foreach (Noun noun in NounCollection.Collection.Nouns)
             {
                 //skip nouns that do not contain specified substring
@@ -134,7 +134,7 @@ namespace SharpDevs.Fleksator.Edit
 
                 if (validCat)
                 {
-                    listNouns.Items.Add(new Option<Noun>
+                    this.listNouns.Items.Add(new Option<Noun>
                         (noun, noun.Root));
                 }
             }
@@ -142,23 +142,23 @@ namespace SharpDevs.Fleksator.Edit
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (selectedNoun != null && tmp != null)
+            if (this.selectedNoun != null && this.tmp != null)
             {
                 // save changes in existing noun
-                selectedNoun.AnalyzeLine(tmp.WriteNoun());
-                DoFilterNouns();
+                this.selectedNoun.AnalyzeLine(this.tmp.WriteNoun());
+                this.DoFilterNouns();
             }
 
-            selectedNoun = new Noun();
-            selectedNoun.Root = "<nowy>";
-            tmp = selectedNoun;
-            NounCollection.Collection.Nouns.Add(selectedNoun);
-            this.controlEditNoun.EditNoun(tmp);
+            this.selectedNoun = new Noun();
+            this.selectedNoun.Root = "<nowy>";
+            this.tmp = this.selectedNoun;
+            NounCollection.Collection.Nouns.Add(this.selectedNoun);
+            this.controlEditNoun.EditNoun(this.tmp);
 
-            DoFilterNouns();
+            this.DoFilterNouns();
 
             foreach (Option<Noun> opt in this.listNouns.Items)
-                if (opt.Key == selectedNoun)
+                if (opt.Key == this.selectedNoun)
                 {
                     this.listNouns.SelectedItem = opt;
                     break;
@@ -168,8 +168,8 @@ namespace SharpDevs.Fleksator.Edit
         private void button1_Click(object sender, EventArgs e)
         {
             // cancle changes
-            tmp.AnalyzeLine(selectedNoun.WriteNoun());
-            this.controlEditNoun.EditNoun(tmp);
+            this.tmp.AnalyzeLine(this.selectedNoun.WriteNoun());
+            this.controlEditNoun.EditNoun(this.tmp);
         }
 
         private void bDelete_Click(object sender, EventArgs e)
@@ -177,13 +177,13 @@ namespace SharpDevs.Fleksator.Edit
             if (MessageBox.Show(this, "Na pewno?", "Usuwanie rzeczownika", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                NounCollection.Collection.Nouns.Remove(selectedNoun);
+                NounCollection.Collection.Nouns.Remove(this.selectedNoun);
                 this.controlEditNoun.EditNoun(null);
 
-                selectedNoun = null;
-                tmp = null;
+                this.selectedNoun = null;
+                this.tmp = null;
 
-                DoFilterNouns();
+                this.DoFilterNouns();
             }
         }
     }

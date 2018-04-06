@@ -71,7 +71,7 @@ namespace MersenneTwister
             init[2] = 0x345;
             init[3] = 0x456;
             ulong length = 4;
-            init_by_array(init, length);
+            this.init_by_array(init, length);
         }
 
         // initializes mt[N] with a seed
@@ -97,7 +97,7 @@ namespace MersenneTwister
         public void init_by_array(ulong[] init_key, ulong key_length)
         {
             ulong i, j, k;
-            init_genrand(19650218UL);
+            this.init_genrand(19650218UL);
             i = 1; j = 0;
             k = (N > key_length ? N : key_length);
             for (; k > 0; k--)
@@ -123,28 +123,28 @@ namespace MersenneTwister
         // generates a random number on [0,0x7fffffff]-interval
         public long genrand_int31()
         {
-            return (long)(genrand_int32() >> 1);
+            return (long)(this.genrand_int32() >> 1);
         }
         // generates a random number on [0,1]-real-interval
         public double genrand_real1()
         {
-            return (double)genrand_int32() * (1.0 / 4294967295.0); // divided by 2^32-1 
+            return (double) this.genrand_int32() * (1.0 / 4294967295.0); // divided by 2^32-1 
         }
         // generates a random number on [0,1)-real-interval
         public double genrand_real2()
         {
-            return (double)genrand_int32() * (1.0 / 4294967296.0); // divided by 2^32
+            return (double) this.genrand_int32() * (1.0 / 4294967296.0); // divided by 2^32
         }
         // generates a random number on (0,1)-real-interval
         public double genrand_real3()
         {
-            return (((double)genrand_int32()) + 0.5) * (1.0 / 4294967296.0); // divided by 2^32
+            return (((double) this.genrand_int32()) + 0.5) * (1.0 / 4294967296.0); // divided by 2^32
         }
         // generates a random number on [0,1) with 53-bit resolution
         public double genrand_res53()
         {
-            ulong a = genrand_int32() >> 5;
-            ulong b = genrand_int32() >> 6;
+            ulong a = this.genrand_int32() >> 5;
+            ulong b = this.genrand_int32() >> 6;
             return (double)(a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
         }
         // These real versions are due to Isaku Wada, 2002/01/09 added 
@@ -164,7 +164,7 @@ namespace MersenneTwister
                 ulong kk;
 
                 if (mti == N + 1)   /* if init_genrand() has not been called, */
-                    init_genrand(5489UL); /* a default initial seed is used */
+                    this.init_genrand(5489UL); /* a default initial seed is used */
 
                 for (kk = 0; kk < N - M; kk++)
                 {
@@ -196,7 +196,7 @@ namespace MersenneTwister
 
         public int RandomRange(int lo, int hi)
         {
-            return (Math.Abs((int)genrand_int32() % (hi - lo + 1)) + lo);
+            return (Math.Abs((int) this.genrand_int32() % (hi - lo + 1)) + lo);
         }
         //public int RollDice(int face, int number_of_dice)
         //{

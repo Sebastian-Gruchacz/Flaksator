@@ -12,8 +12,8 @@ namespace SharpDevs.Fleksator.Grammar
         /// </summary>
         public string Infinitive
         {
-            get { return base.Root; }
-            set { Root = value; }
+            get { return this.Root; }
+            set { this.Root = value; }
         }
 
         /// <summary>

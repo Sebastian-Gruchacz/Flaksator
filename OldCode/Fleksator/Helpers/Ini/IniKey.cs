@@ -9,16 +9,16 @@ namespace SharpDevs.Helpers.Ini
     {
         public IniKey()
         {
-            _multiline = false;
-            _isComment = false;
+            this._multiline = false;
+            this._isComment = false;
         }
 
         internal event EventHandler OnChange;
 
         protected void SetChanged()
         {
-            if (OnChange != null)
-                OnChange(this, new EventArgs());
+            if (this.OnChange != null)
+                this.OnChange(this, new EventArgs());
         }
 
         private string _name;
@@ -29,50 +29,50 @@ namespace SharpDevs.Helpers.Ini
 
         public bool IsComment
         {
-            get { return _isComment; }
+            get { return this._isComment; }
         }
 
         public bool Multiline
         {
-            get { return _multiline; }
+            get { return this._multiline; }
         }
 
         public string[] Values
         {
-            get { return _values; }
+            get { return this._values; }
             set 
             {
-                _multiline = true;
-                _values = value;
-                SetChanged();
+                this._multiline = true;
+                this._values = value;
+                this.SetChanged();
             }
         }
 
         public string Value
         {
-            get { return _value; }
+            get { return this._value; }
             set 
             {
-                _multiline = false;
-                _value = value;
-                SetChanged();
+                this._multiline = false;
+                this._value = value;
+                this.SetChanged();
             }
         }
 
         public string Name
         {
-            get { return _name; }
+            get { return this._name; }
             set 
             {
-                _name = value;
-                _isComment = (_name.StartsWith(";"));
-                SetChanged();
+                this._name = value;
+                this._isComment = (this._name.StartsWith(";"));
+                this.SetChanged();
             }
         }
 
         internal void WriteToStream(StreamWriter stream)
         {
-            if (_multiline)
+            if (this._multiline)
             {
                 stream.WriteLine("{0}=<<--", this._name);
 
@@ -81,7 +81,7 @@ namespace SharpDevs.Helpers.Ini
 
                 stream.WriteLine("--");
             }
-            else if (_isComment)
+            else if (this._isComment)
                 stream.WriteLine(string.Format(";{0}", this._value));
             else
                 stream.WriteLine(string.Format("{0}={1}", this._name, this._value));

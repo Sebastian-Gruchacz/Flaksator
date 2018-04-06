@@ -1,8 +1,7 @@
-using System;
-using System.Runtime.InteropServices;
-
 namespace ObscureWare.ErrorHandling.Tests
 {
+    using System;
+
     /// <summary>
     /// Test helper class
     /// </summary>

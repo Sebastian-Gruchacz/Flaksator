@@ -1,11 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Obscureware.Flaksator.Data;
-
-namespace Obscureware.Flaksator
+﻿namespace Obscureware.Flaksator
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+
+    using Data;
+
     public class FlaksatorDataFactory
     {
         private readonly string _dbPath;
@@ -13,10 +14,10 @@ namespace Obscureware.Flaksator
         public FlaksatorDataFactory(string dbLocationString)
         {
             string[] parts = dbLocationString.Split('|');
-            string folder = LocateParentFolder(
+            string folder = this.LocateParentFolder(
                 Assembly.GetCallingAssembly().Location,
                 parts[0]);
-            _dbPath = Path.Combine(folder, parts[1]);
+            this._dbPath = Path.Combine(folder, parts[1]);
         }
 
         private string LocateParentFolder(string currentFolder, string searchedName)
@@ -24,7 +25,7 @@ namespace Obscureware.Flaksator
             FileInfo file = new FileInfo(currentFolder);
             if (file.Exists) // skip file
             {
-                return LocateParentFolder(file.Directory.FullName, searchedName);
+                return this.LocateParentFolder(file.Directory.FullName, searchedName);
             }
 
             var root = Path.GetPathRoot(currentFolder);
@@ -45,12 +46,12 @@ namespace Obscureware.Flaksator
                 throw new InvalidOperationException("Could not locate valid data folder.");
             }
 
-            return LocateParentFolder(dir.Parent.FullName, searchedName);
+            return this.LocateParentFolder(dir.Parent.FullName, searchedName);
         }
 
         public IDocumentDatabase CreateDatabase()
         {
-            return new FlaksatorDatabase(_dbPath);
+            return new FlaksatorDatabase(this._dbPath);
         }
     }
 }

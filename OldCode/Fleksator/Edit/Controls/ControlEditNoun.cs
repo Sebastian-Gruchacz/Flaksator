@@ -16,22 +16,22 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
         public ControlEditNoun()
         {
-            InitializeComponent();            
+            this.InitializeComponent();            
         }
 
         private void ControlEditNoun_Load(object sender, EventArgs e)
         {
-            LoadCasesControls(this.panelSingular, DecliantionNumber.Singular);
-            LoadCasesControls(this.panelPlural, DecliantionNumber.Plural);
+            this.LoadCasesControls(this.panelSingular, DecliantionNumber.Singular);
+            this.LoadCasesControls(this.panelPlural, DecliantionNumber.Plural);
 
-            LoadCategories();
-            LoadGenres(this.cboGenres, false);
-            LoadGenres(this.cboGenresIrregular, true);
+            this.LoadCategories();
+            this.LoadGenres(this.cboGenres, false);
+            this.LoadGenres(this.cboGenresIrregular, true);
         }
 
         void LoadGenres(ComboBox cbo, bool addUnknown)
         {
-            if (translator == null)
+            if (this.translator == null)
                 return;
 
             cbo.Items.Clear();
@@ -42,7 +42,7 @@ namespace SharpDevs.Fleksator.Edit.Controls
                 if (!addUnknown && aCase == GrammaticalGender._Unknown)
                     continue;
 
-                cbo.Items.Add(new Option<GrammaticalGender>(aCase, translator.TranslateWordGenre(aCase)));
+                cbo.Items.Add(new Option<GrammaticalGender>(aCase, this.translator.TranslateWordGenre(aCase)));
             }
         }
 
@@ -72,8 +72,8 @@ namespace SharpDevs.Fleksator.Edit.Controls
                 edit.Value = "";
                 edit.DecliantionNumber = amount;
                 edit.InflectionCase = aCase;
-                edit.PostfixButtonPressed += new EventHandler(edit_PostfixButtonPressed);
-                edit.IrregularSet += new EventHandler(edit_IrregularSet);
+                edit.PostfixButtonPressed += new EventHandler(this.edit_PostfixButtonPressed);
+                edit.IrregularSet += new EventHandler(this.edit_IrregularSet);
 
                 targetPanel.Controls.Add(edit);
             }
@@ -83,7 +83,7 @@ namespace SharpDevs.Fleksator.Edit.Controls
         {
             ControlNounCaseEdit edit = (ControlNounCaseEdit)sender;
             NounGrammar.SetPostIndex(this.edited, edit.InflectionCase, edit.DecliantionNumber, edit.PostFixIndex);
-            RefreshFields();
+            this.RefreshFields();
         }
 
         void edit_IrregularSet(object sender, EventArgs e)
@@ -91,19 +91,19 @@ namespace SharpDevs.Fleksator.Edit.Controls
             ControlNounCaseEdit edit = (ControlNounCaseEdit)sender;
             WordToken token = new WordToken(edit.Value, edit.InflectionCase, edit.DecliantionNumber);
             NounGrammar.UpdateIrregular(this.edited, token);
-            RefreshFields();
+            this.RefreshFields();
         }
 
         private Noun edited = null;
 
         public void EditNoun(Noun noun)
         {
-            edited = noun;
+            this.edited = noun;
             
 
             if (noun == null)
             {
-                editing = true;
+                this.editing = true;
 
                 this.eRoot.Text = "";
                 this.eRootIrregular.Text = "";
@@ -111,11 +111,11 @@ namespace SharpDevs.Fleksator.Edit.Controls
                 this.checkNoPlural.Checked = false;
                 this.checkNoSingular.Checked = false;
 
-                editing = false;
+                this.editing = false;
             }
             else
             {
-                RefreshFields();
+                this.RefreshFields();
             }
 
         }
@@ -124,99 +124,99 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
         private void RefreshFields()
         {
-            editing = true;
+            this.editing = true;
 
             // "loose" fields
-            this.eRoot.Text = edited.Root;
-            this.eRootIrregular.Text = edited.RootOther;
-            this.checkConstant.Checked = edited.IsConstant;
-            this.checkNoPlural.Checked = !edited.CanBePlural;
-            this.checkNoSingular.Checked = !edited.CanBeSingular;
+            this.eRoot.Text = this.edited.Root;
+            this.eRootIrregular.Text = this.edited.RootOther;
+            this.checkConstant.Checked = this.edited.IsConstant;
+            this.checkNoPlural.Checked = !this.edited.CanBePlural;
+            this.checkNoSingular.Checked = !this.edited.CanBeSingular;
 
             // categories
-            for (int i = 0; i < chlistCategories.Items.Count; i++)
+            for (int i = 0; i < this.chlistCategories.Items.Count; i++)
             {
-                if (edited.Categories.Contains(((Option<int>)chlistCategories.Items[i]).Key))
-                    chlistCategories.SetItemChecked(i, true);
+                if (this.edited.Categories.Contains(((Option<int>) this.chlistCategories.Items[i]).Key))
+                    this.chlistCategories.SetItemChecked(i, true);
                 else
-                    chlistCategories.SetItemChecked(i, false);
+                    this.chlistCategories.SetItemChecked(i, false);
             }
 
             // Forms
-            cboGenres.SelectedIndex = -1;
-            for (int i = 0; i < cboGenres.Items.Count; i++)
+            this.cboGenres.SelectedIndex = -1;
+            for (int i = 0; i < this.cboGenres.Items.Count; i++)
             {
-                if (((Option<GrammaticalGender>)cboGenres.Items[i]).Key == edited.Genre)
+                if (((Option<GrammaticalGender>) this.cboGenres.Items[i]).Key == this.edited.Genre)
                 {
-                    cboGenres.SelectedIndex = i;                    
+                    this.cboGenres.SelectedIndex = i;                    
                     break;
                 }
             }
 
-            if (edited.HasIrregularGenre)
+            if (this.edited.HasIrregularGenre)
             {
-                for (int i = 0; i < cboGenresIrregular.Items.Count; i++)
+                for (int i = 0; i < this.cboGenresIrregular.Items.Count; i++)
                 {
-                    if (((Option<GrammaticalGender>)cboGenresIrregular.Items[i]).Key == edited.IrregularGenre)
+                    if (((Option<GrammaticalGender>) this.cboGenresIrregular.Items[i]).Key == this.edited.IrregularGenre)
                     {
-                        cboGenresIrregular.SelectedIndex = i;
+                        this.cboGenresIrregular.SelectedIndex = i;
                         break;
                     }
                 }
             }
             else
-                cboGenresIrregular.SelectedIndex = -1;
+                this.cboGenresIrregular.SelectedIndex = -1;
 
-            cboPostfixes.SelectedIndex = -1;
-            for (int i = 0; i < cboPostfixes.Items.Count; i++)
+            this.cboPostfixes.SelectedIndex = -1;
+            for (int i = 0; i < this.cboPostfixes.Items.Count; i++)
             {
-                if ((string)cboPostfixes.Items[i] == edited.DeclinationType)
+                if ((string) this.cboPostfixes.Items[i] == this.edited.DeclinationType)
                 {
-                    cboPostfixes.SelectedIndex = i;
+                    this.cboPostfixes.SelectedIndex = i;
                     break;
                 }
             }
 
-            editing = false;
+            this.editing = false;
 
-            cboGenres_SelectedIndexChanged(cboGenres, EventArgs.Empty);
+            this.cboGenres_SelectedIndexChanged(this.cboGenres, EventArgs.Empty);
         }
 
         private void cboGenres_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            Option<GrammaticalGender> opt = (Option<GrammaticalGender>)cboGenres.SelectedItem;
+            Option<GrammaticalGender> opt = (Option<GrammaticalGender>) this.cboGenres.SelectedItem;
             if (opt != null)
             {
-                edited.Genre = opt.Key;
+                this.edited.Genre = opt.Key;
 
-                SetEdited(this.panelSingular, edited);
-                SetEdited(this.panelPlural, edited);
+                this.SetEdited(this.panelSingular, this.edited);
+                this.SetEdited(this.panelPlural, this.edited);
             }
             else
             {
-                SetEdited(this.panelSingular, null);
-                SetEdited(this.panelPlural, null);
+                this.SetEdited(this.panelSingular, null);
+                this.SetEdited(this.panelPlural, null);
             }
         }
 
         private void cboGenresIrregular_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            Option<GrammaticalGender> opt = (Option<GrammaticalGender>)cboGenresIrregular.SelectedItem;
+            Option<GrammaticalGender> opt = (Option<GrammaticalGender>) this.cboGenresIrregular.SelectedItem;
             if (opt != null)
             {
-                edited.IrregularGenre = opt.Key;
-                edited.HasIrregularGenre = edited.IrregularGenre != GrammaticalGender._Unknown;
+                this.edited.IrregularGenre = opt.Key;
+                this.edited.HasIrregularGenre = this.edited.IrregularGenre != GrammaticalGender._Unknown;
             }
             else
             {
-                edited.IrregularGenre = GrammaticalGender._Unknown;
-                edited.HasIrregularGenre = false;
+                this.edited.IrregularGenre = GrammaticalGender._Unknown;
+                this.edited.HasIrregularGenre = false;
             }
         }
 
@@ -248,14 +248,14 @@ namespace SharpDevs.Fleksator.Edit.Controls
             frm.SetNoun(this.edited);
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                if (edited.HasIrregularGenre)
+                if (this.edited.HasIrregularGenre)
                 {
-                    for (int i = 0; i < cboGenresIrregular.Items.Count; i++)
+                    for (int i = 0; i < this.cboGenresIrregular.Items.Count; i++)
                     {
-                        if (((Option<GrammaticalGender>)cboGenresIrregular.Items[i]).Key == edited.IrregularGenre)
+                        if (((Option<GrammaticalGender>) this.cboGenresIrregular.Items[i]).Key == this.edited.IrregularGenre)
                         {
-                            cboGenresIrregular.SelectedIndex = i;
-                            cboGenresIrregular_SelectedIndexChanged(cboGenresIrregular, EventArgs.Empty);
+                            this.cboGenresIrregular.SelectedIndex = i;
+                            this.cboGenresIrregular_SelectedIndexChanged(this.cboGenresIrregular, EventArgs.Empty);
                             break;
                         }
                     }
@@ -265,34 +265,34 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
         private void eRoot_TextChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            edited.Root = eRoot.Text;
-            cboGenres_SelectedIndexChanged(cboGenres, EventArgs.Empty);
+            this.edited.Root = this.eRoot.Text;
+            this.cboGenres_SelectedIndexChanged(this.cboGenres, EventArgs.Empty);
         }
 
         private void eRootIrregular_TextChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            edited.RootOther = eRootIrregular.Text;
-            cboGenres_SelectedIndexChanged(cboGenres, EventArgs.Empty);
+            this.edited.RootOther = this.eRootIrregular.Text;
+            this.cboGenres_SelectedIndexChanged(this.cboGenres, EventArgs.Empty);
         }
 
         private void cboPostfixes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
-            edited.DeclinationType = (string)cboPostfixes.SelectedItem;
-            cboGenres_SelectedIndexChanged(cboGenres, EventArgs.Empty);
+            this.edited.DeclinationType = (string) this.cboPostfixes.SelectedItem;
+            this.cboGenres_SelectedIndexChanged(this.cboGenres, EventArgs.Empty);
         }
 
         private void chlistCategories_Click(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
             this.edited.Categories.Clear();
@@ -302,7 +302,7 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
         private void chlistCategories_Leave(object sender, EventArgs e)
         {
-            if (editing)
+            if (this.editing)
                 return;
 
             this.edited.Categories.Clear();

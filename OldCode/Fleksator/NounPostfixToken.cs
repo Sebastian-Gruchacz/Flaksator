@@ -11,40 +11,40 @@ namespace SharpDevs.Fleksator
 
         public DecliantionNumber DecliantionNumber
         {
-            get { return amount; }
-            set { amount = value; }
+            get { return this.amount; }
+            set { this.amount = value; }
         }
 
         private InflectionCase inflectionCase;
 
         public InflectionCase InflectionCase
         {
-            get { return inflectionCase; }
-            set { inflectionCase = value; }
+            get { return this.inflectionCase; }
+            set { this.inflectionCase = value; }
         }
 
         private string[] postfixes;
 
         public string[] Postfixes
         {
-            get { return postfixes; }
-            set { postfixes = value; }
+            get { return this.postfixes; }
+            set { this.postfixes = value; }
         }
 
         private string nounDeclination;
 
         public string Declination
         {
-            get { return nounDeclination; }
-            set { nounDeclination = value; }
+            get { return this.nounDeclination; }
+            set { this.nounDeclination = value; }
         }
 
         private GrammaticalGender genre;
 
         public GrammaticalGender Genre
         {
-            get { return genre; }
-            set { genre = value; }
+            get { return this.genre; }
+            set { this.genre = value; }
         }
 
         public NounPostfixToken()

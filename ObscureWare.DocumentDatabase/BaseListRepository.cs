@@ -15,12 +15,12 @@ namespace ObscureWare.DocumentDatabase
 
         protected BaseListRepository(LiteDatabase db)
         {
-            _db = db;
+            this._db = db;
         }
 
         protected IEnumerable<string> GetStrings(string collectionKey)
         {
-            var wrapper = _db.GetCollection<StringCollectionWrapper>(LISTS_IDENTIFIER)
+            var wrapper = this._db.GetCollection<StringCollectionWrapper>(LISTS_IDENTIFIER)
                 .Find(w => w.Key == collectionKey).SingleOrDefault();
             if (wrapper != null)
             {
@@ -32,7 +32,7 @@ namespace ObscureWare.DocumentDatabase
 
         protected void SaveStrings(string collectionKey, IEnumerable<string> items)
         {
-            var collection = _db.GetCollection<StringCollectionWrapper>(LISTS_IDENTIFIER);
+            var collection = this._db.GetCollection<StringCollectionWrapper>(LISTS_IDENTIFIER);
             var wrapper = collection.Find(w => w.Key == collectionKey).SingleOrDefault();
             if (wrapper == null)
             {

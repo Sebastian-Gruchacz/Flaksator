@@ -1,32 +1,32 @@
-using System;
-
 namespace ObscureWare.ErrorHandling.Tests
 {
+    using System;
+
     class ExternalBusinessLogicRepository
     {
         private readonly BusinessLogicRepository _dependencyLogic;
 
         public ExternalBusinessLogicRepository(BusinessLogicRepository dependencyLogic)
         {
-            _dependencyLogic = dependencyLogic;
+            this._dependencyLogic = dependencyLogic;
         }
 
         public OperationResult<Tuple<string, DateTime>> PassSuccessfullMergedOperation()
         {
-            var innerResult = _dependencyLogic.SomeSuccessfullReadOperation();
+            var innerResult = this._dependencyLogic.SomeSuccessfullReadOperation();
             if (innerResult.Success)
             {
                 return new Tuple<string, DateTime>(innerResult.Value, DateTime.Now);
             }
             else
             {
-                return Propagate.Fail(innerResult); // 1st method, preffered
+                return Propagate.Fail(innerResult); // 1st method, proffered
             }
         }
 
         public OperationResult<Tuple<string, DateTime>> PassFailedMergedOperation()
         {
-            var innerResult = _dependencyLogic.SomeFailingReadOperation();
+            var innerResult = this._dependencyLogic.SomeFailingReadOperation();
             if (innerResult.Success)
             {
                 return new Tuple<string, DateTime>(innerResult.Value, DateTime.Now);

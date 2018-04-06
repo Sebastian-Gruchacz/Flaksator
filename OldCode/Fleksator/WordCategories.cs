@@ -43,19 +43,19 @@ namespace SharpDevs.Fleksator
         private Dictionary<int, string> nounCategories = new Dictionary<int, string>();
         public Dictionary<int, string> NounCategories
         {
-            get { return nounCategories; }
+            get { return this.nounCategories; }
         }
 
         private Dictionary<int, string> adjCategories = new Dictionary<int, string>();
         public Dictionary<int, string> AdjectiveCategories
         {
-            get { return adjCategories; }
+            get { return this.adjCategories; }
         }
 
         private Dictionary<int, string> verbCategories = new Dictionary<int, string>();
         public Dictionary<int, string> VerbCategories
         {
-            get { return verbCategories; }
+            get { return this.verbCategories; }
         }
 
         #region Loading & Saving
@@ -100,9 +100,9 @@ namespace SharpDevs.Fleksator
                 // Load Titles
                 iFile.Load(sr);
 
-                LoadDictionary(this.nounCategories, iFile["Noun"]);
-                LoadDictionary(this.adjCategories, iFile["Adjective"]);
-                LoadDictionary(this.verbCategories, iFile["Verb"]);
+                this.LoadDictionary(this.nounCategories, iFile["Noun"]);
+                this.LoadDictionary(this.adjCategories, iFile["Adjective"]);
+                this.LoadDictionary(this.verbCategories, iFile["Verb"]);
             }
             finally
             {

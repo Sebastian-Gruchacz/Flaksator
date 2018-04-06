@@ -11,8 +11,8 @@ namespace SharpDevs.Fleksator
 
         public AdjectiveLevel Level
         {
-            get { return level; }
-            set { level = value; }
+            get { return this.level; }
+            set { this.level = value; }
         }
 
 
@@ -20,8 +20,8 @@ namespace SharpDevs.Fleksator
 
         public GrammaticalGender GrammaticalGender
         {
-            get { return genre; }
-            set { genre = value; }
+            get { return this.genre; }
+            set { this.genre = value; }
         }
 
         public AdjectiveWordToken()

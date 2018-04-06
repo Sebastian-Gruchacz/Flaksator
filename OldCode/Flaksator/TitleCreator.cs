@@ -75,7 +75,7 @@ namespace Flaksator
 #endif
 
                     if (!string.IsNullOrEmpty(line))
-                        titles.Add(line);
+                        this.titles.Add(line);
                 }
 
                 // Load subtitles
@@ -96,7 +96,7 @@ namespace Flaksator
 #endif
 
                     if (!string.IsNullOrEmpty(line))
-                        subTitles.Add(line);
+                        this.subTitles.Add(line);
                 }
 
             }
@@ -115,13 +115,13 @@ namespace Flaksator
 
         public string GetRandomTitle()
         {
-            string verse = this.titles[rnd.Next(0, this.titles.Count)];
-            string title = DecodeLine(verse);
+            string verse = this.titles[this.rnd.Next(0, this.titles.Count)];
+            string title = this.DecodeLine(verse);
 
-            if (rnd.Next(100) > 80)
+            if (this.rnd.Next(100) > 80)
             {
-                verse = this.subTitles[rnd.Next(0, this.subTitles.Count)];
-                string subTitle = DecodeLine(verse);
+                verse = this.subTitles[this.rnd.Next(0, this.subTitles.Count)];
+                string subTitle = this.DecodeLine(verse);
                 if (subTitle != null)
                 {
                     title = string.Format("{0} ({1})", title, subTitle);

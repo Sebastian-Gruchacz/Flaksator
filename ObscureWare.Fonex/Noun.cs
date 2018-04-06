@@ -24,7 +24,7 @@ namespace ObscureWare.Flex
         public string RootOther { get; set; }
 
         /// <summary>
-        /// Each declination type shall be choosed for this noun as default
+        /// Each declination type shall be chosen for this noun as default
         /// </summary>
         public string DeclinationType { get; set; } = "";
 
@@ -60,12 +60,12 @@ namespace ObscureWare.Flex
 
         public void AnalyzeLine(object writeNoun)
         {
-            throw new System.NotImplementedException("Missing code!");
+            throw new NotImplementedException("Missing code!");
         }
 
         public object WriteNoun()
         {
-            throw new System.NotImplementedException("Missing code!");
+            throw new NotImplementedException("Missing code!");
         }
     }
 }

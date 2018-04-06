@@ -75,7 +75,7 @@ namespace SharpDevs.Randomization
         /// <param name="seed"></param>
         public MersenneTwister(int seed)
         {
-            init_genrand((ulong)seed);
+            this.init_genrand((ulong)seed);
         }
 
         private void init_genrand(ulong seed)
@@ -101,7 +101,7 @@ namespace SharpDevs.Randomization
         public void InitByArray(ulong[] init_key)
         {
             int i, j, k;
-            init_genrand(19650218UL);
+            this.init_genrand(19650218UL);
             i = 1; j = 0;
             k = (N > init_key.Length ? N : init_key.Length);
             for (; k > 0; k--)
@@ -139,7 +139,7 @@ namespace SharpDevs.Randomization
                 ulong kk;
 
                 if (mti == N + 1)   /* if init_genrand() has not been called, */
-                    init_genrand(5489UL); /* a default initial seed is used */
+                    this.init_genrand(5489UL); /* a default initial seed is used */
 
                 for (kk = 0; kk < N - M; kk++)
                 {
@@ -173,22 +173,22 @@ namespace SharpDevs.Randomization
 
         public ulong GetNextULong()
         {
-            return genrand_int32();
+            return this.genrand_int32();
         }
 
         public int GetNext()
         {
-            return (int)genrand_int32();
+            return (int) this.genrand_int32();
         }
 
         public int GetNext(int max)
         {
-            return (int)(GetNextDouble() * (double)max);
+            return (int)(this.GetNextDouble() * (double)max);
         }
 
         public int GetNext(int min, int max)
         {
-            return (int)(GetNextDouble() * ((double)max - (double)min) + (double)min);
+            return (int)(this.GetNextDouble() * ((double)max - (double)min) + (double)min);
 
             //return (int)((long)(GetNextDouble() * ((double)max - (double)min) + (double)min) & (long)int.MaxValue);
         }
@@ -196,8 +196,8 @@ namespace SharpDevs.Randomization
         public double GetNextDouble()
         {
             // 53 bit
-            ulong a = genrand_int32() >> 5;
-            ulong b = genrand_int32() >> 6;
+            ulong a = this.genrand_int32() >> 5;
+            ulong b = this.genrand_int32() >> 6;
 
             return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
         }

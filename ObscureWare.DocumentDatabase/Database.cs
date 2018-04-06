@@ -16,8 +16,8 @@ namespace ObscureWare.DocumentDatabase
             if (String.IsNullOrWhiteSpace(dbPath))
                 throw new ArgumentException("Argument is null or whitespace", nameof(dbPath));
 
-            _dbPath = dbPath;
-            _db = new LiteDatabase(_dbPath);
+            this._dbPath = dbPath;
+            this._db = new LiteDatabase(this._dbPath);
 
             //_dictionariesRepository = new Lazy<IDictionariesRepository>(() => new LiteDictionariesRepository(_db));
         }
@@ -27,17 +27,17 @@ namespace ObscureWare.DocumentDatabase
             //if (_dictionariesRepository.IsValueCreated)
             //    _dictionariesRepository.Value.Dispose();
 
-            _db?.Dispose();
+            this._db?.Dispose();
         }
 
         public string DbPath
         {
-            get { return _dbPath; }
+            get { return this._dbPath; }
         }
 
         protected LiteDatabase Db
         {
-            get { return _db; }
+            get { return this._db; }
         }
 
         //public Version GetLibraryVersion(string libraryName, Version currentLibraryVersion)

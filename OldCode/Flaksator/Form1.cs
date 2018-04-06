@@ -17,7 +17,7 @@ namespace Flaksator
     {
         public Form1()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void nounsToolStripMenuItem_Click(object sender, EventArgs e)

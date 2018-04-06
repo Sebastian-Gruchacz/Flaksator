@@ -14,13 +14,13 @@ namespace ObscureWare.Randomization
 
         private RandomizerState(byte[] stateArray)
         {
-            _state = stateArray;
+            this._state = stateArray;
         }
 
         public T Restore()
         {
             var binaryFormatter = new BinaryFormatter();
-            using (var temp = new MemoryStream(_state))
+            using (var temp = new MemoryStream(this._state))
             {
                 return (T)binaryFormatter.Deserialize(temp);
             }

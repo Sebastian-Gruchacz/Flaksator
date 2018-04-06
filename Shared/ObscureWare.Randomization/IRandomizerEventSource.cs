@@ -17,9 +17,9 @@
     {
         public NextIntRangeEventHandlerArgs(int minRange, int maxRange, int generatedValue)
         {
-            MaxRange = maxRange;
-            GeneratedValue = generatedValue;
-            MinRange = minRange;
+            this.MaxRange = maxRange;
+            this.GeneratedValue = generatedValue;
+            this.MinRange = minRange;
         }
 
         public int MinRange { get; private set; }
@@ -37,8 +37,8 @@
     {
         public NextMaxIntEventHandlerArgs(int maxRange, int generatedValue)
         {
-            MaxRange = maxRange;
-            GeneratedValue = generatedValue;
+            this.MaxRange = maxRange;
+            this.GeneratedValue = generatedValue;
         }
 
         public int MaxRange { get; private set; }

@@ -15,14 +15,14 @@ namespace ObscureWare.Randomization
 
         public CardColors Color
         {
-            get { return color; }
+            get { return this.color; }
         }
 
         private CardFigures figure = CardFigures.Ace;
 
         public CardFigures Figure
         {
-            get { return figure; }
+            get { return this.figure; }
         }
 
         public Card(CardColors color, CardFigures figure)
@@ -37,7 +37,7 @@ namespace ObscureWare.Randomization
             string figureName = this.figure.ToString();
             if (figureVal >= 2 && figureVal <= 10)
                 figureName = figureVal.ToString();
-            return string.Format("{0} of {1}", figureName, color.ToString());
+            return string.Format("{0} of {1}", figureName, this.color.ToString());
         }
 
     }

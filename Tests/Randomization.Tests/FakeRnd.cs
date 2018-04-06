@@ -1,7 +1,7 @@
-﻿using ObscureWare.Randomization;
-
-namespace Randomization.Tests
+﻿namespace Randomization.Tests
 {
+    using ObscureWare.Randomization;
+
     public class FakeRnd : Rnd<FakeRandom>
     {
         public FakeRnd(FakeRandom fakeRandom) : base(fakeRandom)

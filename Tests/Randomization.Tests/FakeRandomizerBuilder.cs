@@ -1,24 +1,24 @@
-﻿using ObscureWare.Randomization;
-
-namespace Randomization.Tests
+﻿namespace Randomization.Tests
 {
+    using ObscureWare.Randomization;
+
     public class FakeRandomizerBuilder : IRandomizerBuilder
     {
         private readonly int[] _fakeSequence;
 
         public FakeRandomizerBuilder(params int[] fakeSequence)
         {
-            _fakeSequence = fakeSequence;
+            this._fakeSequence = fakeSequence;
         }
 
         public IRandomizer ConstructDeafultRandomizer()
         {
-            return new FakeRnd(new FakeRandom(_fakeSequence));
+            return new FakeRnd(new FakeRandom(this._fakeSequence));
         }
 
         public IRandomizer ConstructRandomizer(int seed)
         {
-            return new FakeRnd(new FakeRandom(_fakeSequence));
+            return new FakeRnd(new FakeRandom(this._fakeSequence));
         }
     }
 }

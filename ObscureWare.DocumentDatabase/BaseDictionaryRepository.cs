@@ -12,12 +12,12 @@ namespace ObscureWare.DocumentDatabase
 
         public BaseDictionaryRepository(LiteDatabase db)
         {
-            _db = db;
+            this._db = db;
         }
 
         public Dictionary<TKey, TValue> GetDictionary(string collectionKey)
         {
-            var wrapper = _db.GetCollection<DictionaryWrapper<TKey, TValue>>(DICTIONARIES_IDENTIFIER)
+            var wrapper = this._db.GetCollection<DictionaryWrapper<TKey, TValue>>(DICTIONARIES_IDENTIFIER)
                 .Find(w => w.Key == collectionKey).SingleOrDefault();
             if (wrapper != null)
             {
@@ -29,7 +29,7 @@ namespace ObscureWare.DocumentDatabase
 
         public void SaveDictionary(string collectionKey, Dictionary<TKey, TValue> dictionary)
         {
-            var collection = _db.GetCollection<DictionaryWrapper<TKey, TValue>>(DICTIONARIES_IDENTIFIER);
+            var collection = this._db.GetCollection<DictionaryWrapper<TKey, TValue>>(DICTIONARIES_IDENTIFIER);
             var wrapper = collection.Find(w => w.Key == collectionKey).SingleOrDefault();
             if (wrapper == null)
             {

@@ -35,7 +35,7 @@ namespace ObscureWare.Flex
         /// <returns></returns>
         public override string ToString()
         {
-            return DisplayName;
+            return this.DisplayName;
         }
     }
 }

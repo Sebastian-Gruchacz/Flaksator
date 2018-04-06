@@ -27,7 +27,7 @@ namespace ObscureWare.Randomization
 
         public int Roll(int count, Dices dice, IRandomizer rnd)
         {
-            return Roll(count, (int)dice, rnd);
+            return this.Roll(count, (int)dice, rnd);
         }
 
         public int Roll(string rollDesc, IRandomizer rnd)
@@ -47,7 +47,7 @@ namespace ObscureWare.Randomization
             int selectedDiceIndex = rnd.GetNext(numDiceTypes.Length);
             Dices selectedDice = (Dices)Enum.Parse(typeof(Dices), numDiceTypes[selectedDiceIndex]);
 
-            return Roll(dicesCount, selectedDice, rnd);
+            return this.Roll(dicesCount, selectedDice, rnd);
         }
 
         //private void DoDebugLog(string message)

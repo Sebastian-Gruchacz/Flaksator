@@ -14,7 +14,7 @@ namespace SharpDevs.Fleksator.Edit.Controls
     {
         public ControlEditAdjective()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         void LoadCasesControls(Panel targetPanel, DecliantionNumber amount, AdjectiveLevel level)
@@ -67,22 +67,22 @@ namespace SharpDevs.Fleksator.Edit.Controls
 
         private void ControlEditAdjective_Load(object sender, EventArgs e)
         {
-            LoadCasesControls(this.panelSingularEqual, DecliantionNumber.Singular, AdjectiveLevel.Equal);
-            LoadCasesControls(this.panelPluralEqual, DecliantionNumber.Plural, AdjectiveLevel.Equal);
-            LoadCasesControls(this.panelSingularHigher, DecliantionNumber.Singular, AdjectiveLevel.Higher);
-            LoadCasesControls(this.panelPluralHigher, DecliantionNumber.Plural, AdjectiveLevel.Higher);
-            LoadCasesControls(this.panelSingularHighest, DecliantionNumber.Singular, AdjectiveLevel.Highest);
-            LoadCasesControls(this.panelPluralHighest, DecliantionNumber.Plural, AdjectiveLevel.Highest);
+            this.LoadCasesControls(this.panelSingularEqual, DecliantionNumber.Singular, AdjectiveLevel.Equal);
+            this.LoadCasesControls(this.panelPluralEqual, DecliantionNumber.Plural, AdjectiveLevel.Equal);
+            this.LoadCasesControls(this.panelSingularHigher, DecliantionNumber.Singular, AdjectiveLevel.Higher);
+            this.LoadCasesControls(this.panelPluralHigher, DecliantionNumber.Plural, AdjectiveLevel.Higher);
+            this.LoadCasesControls(this.panelSingularHighest, DecliantionNumber.Singular, AdjectiveLevel.Highest);
+            this.LoadCasesControls(this.panelPluralHighest, DecliantionNumber.Plural, AdjectiveLevel.Highest);
 
-            LoadCategories();
-            LoadGenres();
+            this.LoadCategories();
+            this.LoadGenres();
         }
 
         private Adjective edited = null;
 
         public void EditAdjective(Adjective adj)
         {
-            edited = adj;
+            this.edited = adj;
 
             if (adj == null)
             {
@@ -95,57 +95,57 @@ namespace SharpDevs.Fleksator.Edit.Controls
             }
             else
             {
-                RefreshFields();
+                this.RefreshFields();
             }
         }
 
         private void RefreshFields()
         {
             // "loose" fields
-            this.eRoot.Text = edited.Root;
-            this.eRootHigher.Text = edited.LevelHigherForm;
-            this.eRootHighest.Text = edited.LevelHighestForm;
-            this.checkConstant.Checked = edited.IsConstant;
-            this.checkOnlyEqualLevel.Checked = !edited.CanBeLevelled;
+            this.eRoot.Text = this.edited.Root;
+            this.eRootHigher.Text = this.edited.LevelHigherForm;
+            this.eRootHighest.Text = this.edited.LevelHighestForm;
+            this.checkConstant.Checked = this.edited.IsConstant;
+            this.checkOnlyEqualLevel.Checked = !this.edited.CanBeLevelled;
 
             // categories
-            for (int i = 0; i < chlistCategories.Items.Count; i++)
+            for (int i = 0; i < this.chlistCategories.Items.Count; i++)
             {
-                if (edited.Categories.Contains(((Option<int>)chlistCategories.Items[i]).Key))
-                    chlistCategories.SetItemChecked(i, true);
+                if (this.edited.Categories.Contains(((Option<int>) this.chlistCategories.Items[i]).Key))
+                    this.chlistCategories.SetItemChecked(i, true);
                 else
-                    chlistCategories.SetItemChecked(i, false);
+                    this.chlistCategories.SetItemChecked(i, false);
             }
 
             // Forms
-            if (cboGenres.Items.Count > 0 && cboGenres.SelectedIndex == -1)
-                cboGenres.SelectedIndex = 0; // select first
+            if (this.cboGenres.Items.Count > 0 && this.cboGenres.SelectedIndex == -1)
+                this.cboGenres.SelectedIndex = 0; // select first
             else
-                cboGenres_SelectedIndexChanged(cboGenres, EventArgs.Empty); // dip0lsay for selected genre
+                this.cboGenres_SelectedIndexChanged(this.cboGenres, EventArgs.Empty); // dip0lsay for selected genre
         }
 
         private void cboGenres_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Option<GrammaticalGender> opt = (Option<GrammaticalGender>)cboGenres.SelectedItem;
+            Option<GrammaticalGender> opt = (Option<GrammaticalGender>) this.cboGenres.SelectedItem;
             if (opt != null)
             {
                 GrammaticalGender genre = opt.Key;
 
-                SetEdited(this.panelSingularEqual, edited, genre);
-                SetEdited(this.panelPluralEqual, edited, genre);
-                SetEdited(this.panelSingularHigher, edited, genre);
-                SetEdited(this.panelPluralHigher, edited, genre);
-                SetEdited(this.panelSingularHighest, edited, genre);
-                SetEdited(this.panelPluralHighest, edited, genre);
+                this.SetEdited(this.panelSingularEqual, this.edited, genre);
+                this.SetEdited(this.panelPluralEqual, this.edited, genre);
+                this.SetEdited(this.panelSingularHigher, this.edited, genre);
+                this.SetEdited(this.panelPluralHigher, this.edited, genre);
+                this.SetEdited(this.panelSingularHighest, this.edited, genre);
+                this.SetEdited(this.panelPluralHighest, this.edited, genre);
             }
             else
             {
-                SetEdited(this.panelSingularEqual, null, GrammaticalGender._Unknown);
-                SetEdited(this.panelPluralEqual, null, GrammaticalGender._Unknown);
-                SetEdited(this.panelSingularHigher, null, GrammaticalGender._Unknown);
-                SetEdited(this.panelPluralHigher, null, GrammaticalGender._Unknown);
-                SetEdited(this.panelSingularHighest, null, GrammaticalGender._Unknown);
-                SetEdited(this.panelPluralHighest, null, GrammaticalGender._Unknown);
+                this.SetEdited(this.panelSingularEqual, null, GrammaticalGender._Unknown);
+                this.SetEdited(this.panelPluralEqual, null, GrammaticalGender._Unknown);
+                this.SetEdited(this.panelSingularHigher, null, GrammaticalGender._Unknown);
+                this.SetEdited(this.panelPluralHigher, null, GrammaticalGender._Unknown);
+                this.SetEdited(this.panelSingularHighest, null, GrammaticalGender._Unknown);
+                this.SetEdited(this.panelPluralHighest, null, GrammaticalGender._Unknown);
             }
 
         }

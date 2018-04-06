@@ -20,20 +20,20 @@ namespace ObscureWare.Randomization
 
         public WeightedContainer(IEnumerable<T> elements)
         {
-            RestoreElements(elements.ToArray());
+            this.RestoreElements(elements.ToArray());
         }
 
         public T DrawElement(IRandomizer randomizer)
         {
-            if (_revolver != null)
+            if (this._revolver != null)
             {
-                return _revolver.DrawElement(randomizer);
+                return this._revolver.DrawElement(randomizer);
             }
             else
             {
-                int rnd = randomizer.GetNext(0, (int)_totalScale);
+                int rnd = randomizer.GetNext(0, (int) this._totalScale);
                 uint totalScore = 0;
-                foreach (T element in _elements)
+                foreach (T element in this._elements)
                 {
                     totalScore += element.ProbabilityWeight;
                     if (totalScore >= rnd)
@@ -41,36 +41,36 @@ namespace ObscureWare.Randomization
                 }
 
                 // closing element
-                return _elements[_elements.Count];
+                return this._elements[this._elements.Count];
             }
         }
 
         private void RestoreElements(T[] elements)
         {
-            _elements.AddRange(elements);
+            this._elements.AddRange(elements);
             foreach (var element in elements)
             {
-                _totalScale += element.ProbabilityWeight;
+                this._totalScale += element.ProbabilityWeight;
             }
 
-            if (_elements.Count * MODE_BALANCE_FACTOR > _totalScale)
+            if (this._elements.Count * this.MODE_BALANCE_FACTOR > this._totalScale)
             {
-                SetRevolverMode();
+                this.SetRevolverMode();
             }
             else
             {
-                SetScanningMode();
+                this.SetScanningMode();
             }
         }
 
         private void SetScanningMode()
         {
-            _revolver = null;
+            this._revolver = null;
         }
 
         private void SetRevolverMode()
         {
-            _revolver = new ProbabilityRevolver(_totalScale, _elements);
+            this._revolver = new ProbabilityRevolver(this._totalScale, this._elements);
         }
 
         private class ProbabilityRevolver
@@ -80,14 +80,14 @@ namespace ObscureWare.Randomization
 
             public ProbabilityRevolver(uint totalScale, IEnumerable<T> elements)
             {
-                _totalScale = totalScale;
-                _cylinder = new T[totalScale];
+                this._totalScale = totalScale;
+                this._cylinder = new T[totalScale];
                 int startIndex = 0;
                 foreach (T element in elements)
                 {
                     for (int i = startIndex; i < startIndex + element.ProbabilityWeight; i++)
                     {
-                        _cylinder[i] = element;
+                        this._cylinder[i] = element;
                     }
 
                     startIndex += element.ProbabilityWeight;
@@ -96,8 +96,8 @@ namespace ObscureWare.Randomization
 
             public T DrawElement(IRandomizer randomizer)
             {
-                int rnd = randomizer.GetNext(0, (int)_totalScale);
-                return _cylinder[rnd];
+                int rnd = randomizer.GetNext(0, (int) this._totalScale);
+                return this._cylinder[rnd];
             }
         }
     }

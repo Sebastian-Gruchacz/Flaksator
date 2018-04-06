@@ -13,8 +13,8 @@ namespace ObscureWare.DocumentDatabase
 
         public StringCollectionWrapper(string key, IEnumerable<string> strings)
         {
-            Key = key;
-            Strings = strings.ToArray();
+            this.Key = key;
+            this.Strings = strings.ToArray();
         }
 
         [BsonId]
