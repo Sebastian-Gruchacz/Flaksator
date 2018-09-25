@@ -52,6 +52,7 @@
     <Compile Include="Data\IStringListsRepository.cs" />
     <Compile Include="Data\IDocumentDatabase.cs" />
     <Compile Include="Data\LightStringListsRepository.cs" />
+    <Compile Include="Parsers\VerseParserVersion1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

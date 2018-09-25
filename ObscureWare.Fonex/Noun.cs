@@ -14,7 +14,7 @@ namespace ObscureWare.Flex
         /// </summary>
         public GrammaticalGender Genre { get; set; } = GrammaticalGender._Unknown;
 
-        public bool HasIrregularGenre { get; set; } = false;
+        public bool HasIrregularGenre => this.IrregularGenre != GrammaticalGender._Unknown;
 
         public GrammaticalGender IrregularGenre { get; set; } = GrammaticalGender._Unknown;
 
@@ -28,9 +28,11 @@ namespace ObscureWare.Flex
         /// </summary>
         public string DeclinationType { get; set; } = "";
 
-        public bool CanBeSingular { get; set; } = true;
+        public bool CanBeSingular => (this.Countability & NounCountability.SingularAllowed) == NounCountability.SingularAllowed;
 
-        public bool CanBePlural { get; set; } = true;
+        public bool CanBePlural => (this.Countability & NounCountability.PluralAllowed) == NounCountability.PluralAllowed;
+
+        public NounCountability Countability { get; set; } = NounCountability.PluralAllowed | NounCountability.SingularAllowed;
 
         public List<int> Categories { get; } = new List<int>();
 
@@ -67,5 +69,12 @@ namespace ObscureWare.Flex
         {
             throw new NotImplementedException("Missing code!");
         }
+    }
+
+    [Flags]
+    public enum NounCountability
+    {
+        SingularAllowed = 1,
+        PluralAllowed = 2
     }
 }
