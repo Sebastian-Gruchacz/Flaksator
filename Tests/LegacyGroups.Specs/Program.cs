@@ -31,6 +31,7 @@ namespace LegacyGroups.Specs
             Run("expanded adjectives inflect directly", ExpandedAdjectivesInflectDirectly);
             Run("legacy category references are defined", LegacyCategoryReferencesAreDefined);
             Run("legacy dictionaries are fully categorized", LegacyDictionariesAreFullyCategorized);
+            Run("legacy dictionary roots are unique", LegacyDictionaryRootsAreUnique);
             Run("legacy dictionaries generate a noun phrase", LegacyDictionariesGenerateNounPhrase);
             Run("legacy category formatters decode", LegacyCategoryFormattersDecode);
             Run("extended adjective categories decode", ExtendedAdjectiveCategoriesDecode);
@@ -220,7 +221,7 @@ namespace LegacyGroups.Specs
             LoadLegacyData();
 
             AssertTrue(NounCollection.Collection.Nouns.Count > 100, "legacy noun dictionary should contain substantial data");
-            AssertTrue(AdjectiveCollection.Collection.Adjectives.Count >= 317,
+            AssertTrue(AdjectiveCollection.Collection.Adjectives.Count >= 312,
                 "expanded adjective dictionary should contain the historical entries and the new category set");
             AssertTrue(WordCategories.Categories.NounCategories.Count >= 23, "complete noun categories should load");
             AssertTrue(WordCategories.Categories.AdjectiveCategories.Count >= 22, "complete adjective categories should load");
@@ -280,8 +281,9 @@ namespace LegacyGroups.Specs
             foreach (string[] expected in forms)
             {
                 string root = expected[0];
-                Adjective adjective = AdjectiveCollection.Collection.Adjectives.Find(item => item.Root == root);
-                AssertTrue(adjective != null, "expanded adjective should load: " + root);
+                List<Adjective> matches = AdjectiveCollection.Collection.Adjectives.FindAll(item => item.Root == root);
+                AssertTrue(matches.Count == 1, "expanded adjective should load exactly once: " + root);
+                Adjective adjective = matches.Count == 1 ? matches[0] : null;
                 if (adjective == null)
                     continue;
 
@@ -338,6 +340,29 @@ namespace LegacyGroups.Specs
                 "every noun should remain categorized");
             AssertTrue(categorizedAdjectives == AdjectiveCollection.Collection.Adjectives.Count,
                 "every adjective should remain categorized");
+        }
+
+        private static void LegacyDictionaryRootsAreUnique()
+        {
+            LoadLegacyData();
+            HashSet<string> nounRoots = new HashSet<string>(StringComparer.Ordinal);
+            HashSet<string> adjectiveRoots = new HashSet<string>(StringComparer.Ordinal);
+            List<string> duplicates = new List<string>();
+
+            foreach (Noun noun in NounCollection.Collection.Nouns)
+            {
+                if (!nounRoots.Add(noun.Root))
+                    duplicates.Add("noun: " + noun.Root);
+            }
+
+            foreach (Adjective adjective in AdjectiveCollection.Collection.Adjectives)
+            {
+                if (!adjectiveRoots.Add(adjective.Root))
+                    duplicates.Add("adjective: " + adjective.Root);
+            }
+
+            AssertTrue(duplicates.Count == 0, "dictionary roots should be unique within each word class:" +
+                Environment.NewLine + string.Join(Environment.NewLine, duplicates));
         }
 
         private static void LegacyDictionariesGenerateNounPhrase()
