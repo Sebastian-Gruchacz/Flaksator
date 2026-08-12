@@ -54,7 +54,7 @@ namespace Flaksator
 
             // now decoding...
             string[] results = new string[descriptors.Count];
-            Dictionary<int, GroupInfo> groups = new Dictionary<int, GroupInfo>();
+            Dictionary<string, GroupInfo> groups = new Dictionary<string, GroupInfo>();
 
             for (int i = 0; i < descriptors.Count; i++)
             {
@@ -65,21 +65,20 @@ namespace Flaksator
                 if (index >= 0)
                 {
                     // this is group
-                    string groupStr = code.Substring(0, index);
-                    int groupNumber = -1;
-                    if (!int.TryParse(groupStr, out groupNumber))
+                    string groupName = code.Substring(0, index);
+                    if (!WordFormatterParser.IsValidGroupName(groupName))
                     {
                         results[i] = "{INVALID_GROUP_FORMATTER}";
                     }
                     else
                     {
                         GroupInfo info = null;
-                        if (groups.ContainsKey(groupNumber))
-                            info = groups[groupNumber];
+                        if (groups.ContainsKey(groupName))
+                            info = groups[groupName];
                         else
                         {
-                            info = new GroupInfo(groupNumber);
-                            groups.Add(groupNumber, info);
+                            info = new GroupInfo(groupName);
+                            groups.Add(groupName, info);
                         }
 
                         info.AddCode(i, code.Substring(index + 1));
@@ -182,11 +181,29 @@ namespace Flaksator
 
                             break;
                         }
+                    case 'V': // Verb (czasownik)
+                        {
+                            if (code.Length == 4)
+                            {
+                                VerbTense tense = VerbGrammar.GetTense(code[1]);
+                                GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
+                                DecliantionNumber number = EnumHelper.GetWordAmount(code[3]);
+                                if (tense == VerbTense._Unknown || person == GrammaticalPerson._Unknown ||
+                                    number == DecliantionNumber._Unknown)
+                                    return "{VERB_DEFINITION_INCOMPLETE}";
+
+                                Verb verb = VerbCollection.Collection.GetVerb(candidate =>
+                                    VerbConjurer.Conjurer.MakeWord(candidate, tense, person, number,
+                                        GrammaticalGender._Unknown) != null);
+                                if (verb == null)
+                                    return "{NO_VALID_VERB}";
+
+                                return VerbConjurer.Conjurer.MakeWord(verb, tense, person, number,
+                                    GrammaticalGender._Unknown);
+                            }
+                            break;
+                        }
                     //case 'C': // Counter (liczebnik)
-                    //    {
-                    //        break;
-                    //    }
-                    //case 'V': // Verb (czsownik)
                     //    {
                     //        break;
                     //    }

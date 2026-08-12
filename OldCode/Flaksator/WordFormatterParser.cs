@@ -49,5 +49,17 @@ namespace Flaksator
 
             return false;
         }
+
+        public static bool IsValidGroupName(string groupName)
+        {
+            if (string.IsNullOrEmpty(groupName))
+                return false;
+
+            foreach (char character in groupName)
+                if (!char.IsLetterOrDigit(character) && character != '_')
+                    return false;
+
+            return true;
+        }
     }
 }

@@ -10,8 +10,16 @@ namespace Flaksator
     class GroupInfo
     {
         public GroupInfo(int groupNumber)
+            : this(groupNumber.ToString())
         {
             this.groupNumber = groupNumber;
+        }
+
+        public GroupInfo(string groupName)
+        {
+            this.groupName = groupName;
+            int parsedNumber;
+            this.groupNumber = int.TryParse(groupName, out parsedNumber) ? parsedNumber : -1;
         }
 
         private int groupNumber;
@@ -19,6 +27,13 @@ namespace Flaksator
         public int GroupNumber
         {
             get { return this.groupNumber; }
+        }
+
+        private string groupName;
+
+        public string GroupName
+        {
+            get { return this.groupName; }
         }
 
         private List<string> codes = new List<string>();
@@ -61,15 +76,10 @@ namespace Flaksator
             }
 
             if ((part == GrammaticalPart.Noun && code.Length != 4) ||
-                (part == GrammaticalPart.Adjective && code.Length != 5))
+                (part == GrammaticalPart.Adjective && code.Length != 5) ||
+                (part == GrammaticalPart.Verb && code.Length != 4))
             {
                 this.AddInvalidCode(indexInString, code, "{INVALID_GROUP_FORMATTER}");
-                return;
-            }
-
-            if (part == GrammaticalPart.Verb)
-            {
-                this.AddInvalidCode(indexInString, code, "{UNSUPPORTED_GROUP_VERB}");
                 return;
             }
 
@@ -222,7 +232,39 @@ namespace Flaksator
                             }
                         #endregion
 
-                            // TODO: Verbs
+                        case 'V':   // Verb (czasownik)
+                            {
+                                VerbTense tense = VerbGrammar.GetTense(code[1]);
+                                GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
+                                DecliantionNumber amount = EnumHelper.GetWordAmount(code[3]);
+
+                                if (person == GrammaticalPerson._Unknown)
+                                    person = GrammaticalPerson.Third;
+                                if (amount == DecliantionNumber._Unknown)
+                                    amount = namount;
+
+                                if (tense == VerbTense._Unknown || amount == DecliantionNumber._Unknown)
+                                {
+                                    this.results.Add(formatIndex, "{VERB_DEFINITION_INCOMPLETE}");
+                                    error = true;
+                                    continue;
+                                }
+
+                                Verb verb = VerbCollection.Collection.GetVerb(candidate =>
+                                    VerbConjurer.Conjurer.MakeWord(candidate, tense, person, amount,
+                                        agreementGender) != null);
+                                if (verb == null)
+                                {
+                                    this.results.Add(formatIndex, "{NO_VALID_VERB}");
+                                    error = true;
+                                    continue;
+                                }
+
+                                string form = VerbConjurer.Conjurer.MakeWord(verb, tense, person, amount,
+                                    agreementGender);
+                                this.results.Add(formatIndex, form);
+                                break;
+                            }
                     }
 
                 }

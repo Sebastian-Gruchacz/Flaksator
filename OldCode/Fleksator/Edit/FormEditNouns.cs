@@ -69,18 +69,10 @@ namespace SharpDevs.Fleksator.Edit
 
             if (selected != null)
             {
-                if (this.selectedNoun != null && this.tmp != null)
-                {
-                    // save changes
-                    this.selectedNoun.AnalyzeLine(this.tmp.WriteNoun());
+                if (selected.Key == this.selectedNoun)
+                    return;
 
-                    // refresh display correctly   
-                    int indx = this.listNouns.SelectedIndex;
-                    this.editing = true;
-                    this.DoFilterNouns();
-                    this.listNouns.SelectedIndex = indx;
-                    this.editing = false;
-                }
+                this.SavePendingNoun(true);
 
                 this.selectedNoun = selected.Key;
 
@@ -90,7 +82,12 @@ namespace SharpDevs.Fleksator.Edit
 
             }
             else
+            {
+                this.SavePendingNoun(false);
+                this.selectedNoun = null;
+                this.tmp = null;
                 this.controlEditNoun.EditNoun(null);
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -103,41 +100,101 @@ namespace SharpDevs.Fleksator.Edit
 
         private void DoFilterNouns()
         {
+            this.SavePendingNoun(false);
+
             // read selected categories
-            List<int> usedCategories = new List<int>();
+            HashSet<int> usedCategories = new HashSet<int>();
             for (int i = 0; i < this.chlistCategories.Items.Count; i++)
                 if (this.chlistCategories.GetItemChecked(i))
                     usedCategories.Add(((Option<int>)this.chlistCategories.Items[i]).Key);
 
-            string maskText = this.textBox1.Text.ToLower();
+            string maskText = this.textBox1.Text;
             bool maskFilter = maskText.Length > 0;
+            Option<Noun> selectedOption = null;
+            bool wasEditing = this.editing;
 
-            // Filter out adjectives
-            this.listNouns.Items.Clear();
-            foreach (Noun noun in NounCollection.Collection.Nouns)
+            this.editing = true;
+            this.listNouns.BeginUpdate();
+            try
             {
-                //skip nouns that do not contain specified substring
-                if (maskFilter && !noun.Root.ToLower().Contains(maskText))
+                this.listNouns.Items.Clear();
+                foreach (Noun noun in NounCollection.Collection.Nouns)
+                {
+                    string displayText = DictionaryDisplayText.ForNoun(noun);
+                    if (maskFilter && displayText.IndexOf(maskText, StringComparison.OrdinalIgnoreCase) < 0)
+                        continue;
+
+                    bool validCat = noun.Categories.Count == 0;
+                    if (!validCat)
+                        foreach (int category in noun.Categories)
+                            if (usedCategories.Contains(category))
+                            {
+                                validCat = true;
+                                break;
+                            }
+
+                    if (validCat)
+                    {
+                        Option<Noun> option = new Option<Noun>(noun, displayText);
+                        this.listNouns.Items.Add(option);
+                        if (noun == this.selectedNoun)
+                            selectedOption = option;
+                    }
+                }
+
+                this.listNouns.SelectedItem = selectedOption;
+            }
+            finally
+            {
+                this.listNouns.EndUpdate();
+                this.editing = wasEditing;
+            }
+
+            if (this.selectedNoun != null && selectedOption == null)
+            {
+                this.selectedNoun = null;
+                this.tmp = null;
+                this.controlEditNoun.EditNoun(null);
+            }
+        }
+
+        private void SavePendingNoun(bool updateDisplay)
+        {
+            if (this.selectedNoun == null || this.tmp == null)
+                return;
+
+            this.selectedNoun.AnalyzeLine(this.tmp.WriteNoun());
+            if (updateDisplay)
+                this.UpdateNounDisplay(this.selectedNoun);
+        }
+
+        private void UpdateNounDisplay(Noun noun)
+        {
+            for (int i = 0; i < this.listNouns.Items.Count; i++)
+            {
+                Option<Noun> option = (Option<Noun>) this.listNouns.Items[i];
+                if (option.Key != noun)
                     continue;
 
-                // Display Noun only if valid category is selected
-                bool validCat = false;
-                if (noun.Categories.Count == 0)
-                    validCat = true; // not assigned Adj's are always displayed
-                else
-                    foreach (int category in noun.Categories)
-                        if (usedCategories.Contains(category))
-                        {
-                            validCat = true;
-                            break;
-                        }
-
-                if (validCat)
+                string displayText = DictionaryDisplayText.ForNoun(noun);
+                if (option.Text != displayText)
                 {
-                    this.listNouns.Items.Add(new Option<Noun>
-                        (noun, noun.Root));
+                    bool wasEditing = this.editing;
+                    this.editing = true;
+                    this.listNouns.Items[i] = new Option<Noun>(noun, displayText);
+                    this.editing = wasEditing;
                 }
+                break;
             }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            this.SavePendingNoun(false);
+            this.editing = true;
+            base.OnFormClosing(e);
+            if (e.Cancel)
+                this.editing = false;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -145,7 +202,7 @@ namespace SharpDevs.Fleksator.Edit
             if (this.selectedNoun != null && this.tmp != null)
             {
                 // save changes in existing noun
-                this.selectedNoun.AnalyzeLine(this.tmp.WriteNoun());
+                this.SavePendingNoun(false);
                 this.DoFilterNouns();
             }
 

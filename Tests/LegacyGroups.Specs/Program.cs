@@ -26,12 +26,16 @@ namespace LegacyGroups.Specs
             Run("categories filter ungrouped words", CategoriesFilterUngroupedWords);
             Run("categories filter grouped words", CategoriesFilterGroupedWords);
             Run("invalid category suffix is rejected", InvalidCategorySuffixIsRejected);
-            Run("unsupported verb returns diagnostics", UnsupportedVerbReturnsDiagnostics);
+            Run("incomplete verb formatter returns diagnostics", IncompleteVerbFormatterReturnsDiagnostics);
+            Run("standalone present verb decodes", StandalonePresentVerbDecodes);
+            Run("named group verb inherits subject number", NamedGroupVerbInheritsSubjectNumber);
             Run("legacy dictionaries load", LegacyDictionariesLoad);
+            Run("legacy present verb paradigms conjugate", LegacyPresentVerbParadigmsConjugate);
             Run("expanded adjectives inflect directly", ExpandedAdjectivesInflectDirectly);
             Run("legacy category references are defined", LegacyCategoryReferencesAreDefined);
             Run("legacy dictionaries are fully categorized", LegacyDictionariesAreFullyCategorized);
             Run("legacy dictionary roots are unique", LegacyDictionaryRootsAreUnique);
+            Run("dictionary display uses nominative singular", DictionaryDisplayUsesNominativeSingular);
             Run("legacy dictionaries generate a noun phrase", LegacyDictionariesGenerateNounPhrase);
             Run("legacy category formatters decode", LegacyCategoryFormattersDecode);
             Run("extended adjective categories decode", ExtendedAdjectiveCategoriesDecode);
@@ -130,7 +134,7 @@ namespace LegacyGroups.Specs
             AssertEqual("{NO_VALID_NOUN}", group.Results[1], "noun should report that no matching number is available");
         }
 
-        private static void UnsupportedVerbReturnsDiagnostics()
+        private static void IncompleteVerbFormatterReturnsDiagnostics()
         {
             SetSingleFeminineNounAndAdjective();
 
@@ -138,9 +142,30 @@ namespace LegacyGroups.Specs
             group.AddCode(0, "V");
             group.AddCode(1, "NN1F");
 
-            AssertFalse(group.Analyze(), "verbs are not supported by noun groups yet");
-            AssertEqual("{UNSUPPORTED_GROUP_VERB}", group.Results[0], "unsupported feature should be explicit");
+            AssertFalse(group.Analyze(), "an incomplete verb formatter should invalidate the group");
+            AssertEqual("{INVALID_GROUP_FORMATTER}", group.Results[0], "an incomplete verb should be explicit");
             AssertEqual("kotka", group.Results[1], "supported members should still be generated");
+        }
+
+        private static void StandalonePresentVerbDecodes()
+        {
+            SetSinglePresentVerb("zabija", DecliantionNumber.Singular);
+
+            TestDecoder decoder = new TestDecoder();
+            AssertEqual("zabija", decoder.Decode("{VT31}"),
+                "a standalone verb formatter should generate the requested present form");
+        }
+
+        private static void NamedGroupVerbInheritsSubjectNumber()
+        {
+            SetSingleFeminineNounAndAdjective("kotki", false, true);
+            SetSinglePresentVerb("atakują", DecliantionNumber.Plural);
+
+            TestDecoder decoder = new TestDecoder();
+            string result = decoder.Decode("{subject:NN2F} z oddali {subject:VT3?}");
+
+            AssertEqual("kotki z oddali atakują", result,
+                "a named group verb should inherit plural agreement from its distant subject");
         }
 
         private static void EmptyAdjectiveDictionaryReturnsDiagnostics()
@@ -223,8 +248,49 @@ namespace LegacyGroups.Specs
             AssertTrue(NounCollection.Collection.Nouns.Count > 100, "legacy noun dictionary should contain substantial data");
             AssertTrue(AdjectiveCollection.Collection.Adjectives.Count >= 312,
                 "expanded adjective dictionary should contain the historical entries and the new category set");
+            AssertTrue(VerbCollection.Collection.Verbs.Count >= 47,
+                "the proposed legacy verb dictionary should load");
+            AssertTrue(VerbCollection.Collection.Verbs.FindAll(verb => verb.Forms.Count > 0).Count >= 3,
+                "the first explicit present-tense paradigms should load");
             AssertTrue(WordCategories.Categories.NounCategories.Count >= 23, "complete noun categories should load");
             AssertTrue(WordCategories.Categories.AdjectiveCategories.Count >= 22, "complete adjective categories should load");
+        }
+
+        private static void LegacyPresentVerbParadigmsConjugate()
+        {
+            LoadLegacyData();
+            string[][] paradigms =
+            {
+                new[] { "zabijać", "zabijam", "zabijasz", "zabija", "zabijamy", "zabijacie", "zabijają" },
+                new[] { "krwawić", "krwawię", "krwawisz", "krwawi", "krwawimy", "krwawicie", "krwawią" },
+                new[] { "atakować", "atakuję", "atakujesz", "atakuje", "atakujemy", "atakujecie", "atakują" }
+            };
+            GrammaticalPerson[] persons =
+            {
+                GrammaticalPerson.First, GrammaticalPerson.Second, GrammaticalPerson.Third,
+                GrammaticalPerson.First, GrammaticalPerson.Second, GrammaticalPerson.Third
+            };
+            DecliantionNumber[] numbers =
+            {
+                DecliantionNumber.Singular, DecliantionNumber.Singular, DecliantionNumber.Singular,
+                DecliantionNumber.Plural, DecliantionNumber.Plural, DecliantionNumber.Plural
+            };
+
+            foreach (string[] expected in paradigms)
+            {
+                Verb verb = VerbCollection.Collection.Verbs.Find(item => item.Infinitive == expected[0]);
+                AssertTrue(verb != null, "the explicit verb paradigm should load: " + expected[0]);
+                if (verb == null)
+                    continue;
+
+                for (int i = 0; i < persons.Length; i++)
+                {
+                    string actual = VerbConjurer.Conjurer.MakeWord(verb, VerbTense.Present,
+                        persons[i], numbers[i], GrammaticalGender._Unknown);
+                    AssertEqual(expected[i + 1], actual,
+                        "the explicit present form should round-trip: " + expected[0]);
+                }
+            }
         }
 
         private static void ExpandedAdjectivesInflectDirectly()
@@ -365,6 +431,24 @@ namespace LegacyGroups.Specs
                 Environment.NewLine + string.Join(Environment.NewLine, duplicates));
         }
 
+        private static void DictionaryDisplayUsesNominativeSingular()
+        {
+            LoadLegacyData();
+            Noun noun = NounCollection.Collection.Nouns.Find(item => item.Root == "jelit");
+            Adjective adjective = AdjectiveCollection.Collection.Adjectives.Find(item => item.Root == "gładka");
+
+            AssertTrue(noun != null, "the stem-based noun fixture should load");
+            AssertTrue(adjective != null, "the adjective fixture should load");
+            AssertEqual("jelito", DictionaryDisplayText.ForNoun(noun),
+                "the noun list should display the generated nominative singular instead of the stored stem");
+            AssertEqual("gładka", DictionaryDisplayText.ForAdjective(adjective),
+                "the adjective list should display its generated feminine nominative singular");
+
+            Noun singularUnavailable = new Noun { Root = "tylko-mnogie", CanBeSingular = false };
+            AssertEqual("tylko-mnogie", DictionaryDisplayText.ForNoun(singularUnavailable),
+                "the display should fall back to the stored root when singular is unavailable");
+        }
+
         private static void LegacyDictionariesGenerateNounPhrase()
         {
             LoadLegacyData();
@@ -450,9 +534,11 @@ namespace LegacyGroups.Specs
             NounCollection.Collection.Nouns.Clear();
             NounCollection.Collection.SortedNouns.Clear();
             AdjectiveCollection.Collection.Adjectives.Clear();
+            VerbCollection.Collection.Verbs.Clear();
 
             NounCollection.Collection.LoadFromFile(Path.Combine(dataPath, "Nouns.txt"));
             AdjectiveCollection.Collection.LoadFromFile(Path.Combine(dataPath, "Adjectives.txt"));
+            VerbCollection.Collection.LoadFromFile(Path.Combine(dataPath, "Verbs.txt"));
             NounDecliner.Decliner.LoadPostfixes(Path.Combine(dataPath, "NounPostfixes.txt"));
             WordCategories.Categories.LoadFromFile(Path.Combine(dataPath, "Categories.ini"));
 
@@ -498,6 +584,22 @@ namespace LegacyGroups.Specs
 
             AdjectiveCollection.Collection.Adjectives.Clear();
             AdjectiveCollection.Collection.Adjectives.Add(new Adjective { Root = "czarny" });
+        }
+
+        private static void SetSinglePresentVerb(string form, DecliantionNumber number)
+        {
+            Verb verb = new Verb { Infinitive = "testować" };
+            verb.Forms.Add(new VerbForm
+            {
+                Tense = VerbTense.Present,
+                Person = GrammaticalPerson.Third,
+                Number = number,
+                Gender = GrammaticalGender._Unknown,
+                Text = form
+            });
+
+            VerbCollection.Collection.Verbs.Clear();
+            VerbCollection.Collection.Verbs.Add(verb);
         }
 
         private static void SetCategorizedWords()

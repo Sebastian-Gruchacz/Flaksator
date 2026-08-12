@@ -55,6 +55,9 @@ namespace SharpDevs.Fleksator.Edit
 
         private void listAdjectives_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (this.editing)
+                return;
+
             this.selected = (Option<Adjective>) this.listAdjectives.SelectedItem;
 
             if (this.selected != null)
@@ -67,6 +70,9 @@ namespace SharpDevs.Fleksator.Edit
 
         private void checkOnlyLevelled_CheckedChanged(object sender, EventArgs e)
         {
+            if (this.editing)
+                return;
+
             this.chlistCategories_SelectedIndexChanged(this.chlistCategories, EventArgs.Empty);
         }
 
@@ -81,45 +87,69 @@ namespace SharpDevs.Fleksator.Edit
         private void DoFilterAdjectives()
         {
             // read selected categories
-            List<int> usedCategories = new List<int>();
+            HashSet<int> usedCategories = new HashSet<int>();
             for (int i = 0; i < this.chlistCategories.Items.Count; i++)
                 if (this.chlistCategories.GetItemChecked(i))
                     usedCategories.Add(((Option<int>)this.chlistCategories.Items[i]).Key);
 
             bool onlyLevelled = this.checkOnlyLevelled.Checked;
-            string maskText = this.textBox1.Text.ToLower();
+            string maskText = this.textBox1.Text;
             bool maskFilter = maskText.Length > 0;
+            Adjective selectedAdjective = this.selected == null ? null : this.selected.Key;
+            Option<Adjective> selectedOption = null;
+            bool wasEditing = this.editing;
 
-            // Filter out adjectives
-            this.listAdjectives.Items.Clear();
-            foreach (Adjective adj in AdjectiveCollection.Collection.Adjectives)
+            this.editing = true;
+            this.listAdjectives.BeginUpdate();
+            try
             {
-                // skip Adjectives that cannot be levelled when user specifies so
-                if (onlyLevelled && !adj.CanBeLevelled)
-                    continue;
-
-                //skip adjcectives that do not contain specified substring
-                if (maskFilter && !adj.Root.ToLower().Contains(maskText))
-                    continue;
-
-                // Display Adjective only if valid category is selected
-                bool validCat = false;
-                if (adj.Categories.Count == 0)
-                    validCat = true; // not assigned Adj's are always displayed
-                else
-                    foreach (int category in adj.Categories)
-                        if (usedCategories.Contains(category))
-                        {
-                            validCat = true;
-                            break;
-                        }
-
-                if (validCat)
+                this.listAdjectives.Items.Clear();
+                foreach (Adjective adj in AdjectiveCollection.Collection.Adjectives)
                 {
-                    this.listAdjectives.Items.Add(new Option<Adjective>
-                        (adj, adj.Root));
+                    if (onlyLevelled && !adj.CanBeLevelled)
+                        continue;
+
+                    string displayText = DictionaryDisplayText.ForAdjective(adj);
+                    if (maskFilter && displayText.IndexOf(maskText, StringComparison.OrdinalIgnoreCase) < 0)
+                        continue;
+
+                    bool validCat = adj.Categories.Count == 0;
+                    if (!validCat)
+                        foreach (int category in adj.Categories)
+                            if (usedCategories.Contains(category))
+                            {
+                                validCat = true;
+                                break;
+                            }
+
+                    if (validCat)
+                    {
+                        Option<Adjective> option = new Option<Adjective>(adj, displayText);
+                        this.listAdjectives.Items.Add(option);
+                        if (adj == selectedAdjective)
+                            selectedOption = option;
+                    }
                 }
+
+                this.listAdjectives.SelectedItem = selectedOption;
+                this.selected = selectedOption;
             }
+            finally
+            {
+                this.listAdjectives.EndUpdate();
+                this.editing = wasEditing;
+            }
+
+            if (selectedAdjective != null && selectedOption == null)
+                this.controlEditAdjective1.EditAdjective(null);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            this.editing = true;
+            base.OnFormClosing(e);
+            if (e.Cancel)
+                this.editing = false;
         }
     }
 }

@@ -49,6 +49,7 @@ namespace Flaksator
             WordCategories.Categories.LoadFromFile(".\\DataFiles\\Categories.ini");
             AdjectiveCollection.Collection.LoadFromFile(".\\DataFiles\\Adjectives.txt");
             NounCollection.Collection.LoadFromFile(".\\DataFiles\\Nouns.txt");
+            VerbCollection.Collection.LoadFromFile(".\\DataFiles\\Verbs.txt");
             NounDecliner.Decliner.LoadPostfixes(".\\DataFiles\\NounPostfixes.txt");
 
 
