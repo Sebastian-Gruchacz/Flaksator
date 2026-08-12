@@ -89,5 +89,17 @@ namespace SharpDevs.Fleksator
         {
             return this.adjectives[this.rnd.Next(0, this.adjectives.Count)];
         }
+
+        public Adjective GetAdjective(Predicate<Adjective> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            List<Adjective> searchResults = this.adjectives.FindAll(predicate);
+            if (searchResults.Count < 1)
+                return null;
+
+            return searchResults[this.rnd.Next(0, searchResults.Count)];
+        }
     }
 }

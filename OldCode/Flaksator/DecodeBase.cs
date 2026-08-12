@@ -106,8 +106,13 @@ namespace Flaksator
             return string.Format(result, results);
         }
 
-        private string Decode(string code)
+        private string Decode(string formatter)
         {
+            string code;
+            List<int> categoryIds;
+            if (!WordFormatterParser.TryParse(formatter, out code, out categoryIds))
+                return "{INVALID_FORMATTER}";
+
             if (!string.IsNullOrEmpty(code))
             {
                 switch (code[0])
@@ -121,25 +126,13 @@ namespace Flaksator
                                 GrammaticalGender genre = EnumHelper.GetWordGenre(code[3]);
                                 AdjectiveLevel level = EnumHelper.GetAdjectiveLevel(code[4]);
 
-                                Adjective adj = AdjectiveCollection.Collection.GetRandomAdjective();
+                                Adjective adj = AdjectiveCollection.Collection.GetAdjective(candidate =>
+                                    WordFormatterParser.MatchesCategories(candidate.Categories, categoryIds) &&
+                                    AdjectiveDecliner.Decliner.MakeWord(candidate, genre, aCase, amount, level) != null);
                                 if (adj == null)
                                     return "{NO_VALID_ADJECTIVE}";
 
                                 string form = AdjectiveDecliner.Decliner.MakeWord(adj, genre, aCase, amount, level);
-                                if (form != null)
-                                    return form;
-
-                                int tries = 0;
-                                // try randomizing little more...
-                                // TODO: implement some shuffle algorithm
-                                while (form == null && tries++ < 10)
-                                {
-                                    adj = AdjectiveCollection.Collection.GetRandomAdjective();
-                                    form = AdjectiveDecliner.Decliner.MakeWord(adj, genre, aCase, amount, level);
-                                }
-                                if (tries >= 10)
-                                    return "{NO_VALID_ADJECTIVE}"; // 10 tries - probably no valid word in dic
-
                                 return form;
                             }
                             break;
@@ -152,8 +145,8 @@ namespace Flaksator
                                 DecliantionNumber amount = EnumHelper.GetWordAmount(code[2]);
                                 GrammaticalGender genre = EnumHelper.GetWordGenre(code[3]);
 
-                                Noun noun = NounCollection.Collection.GetNoun(genre,
-                                    null,
+                                Noun noun = NounCollection.Collection.GetNounEx(genre,
+                                    categoryIds,
                                     (amount == DecliantionNumber.Singular) ? true : false,
                                     (amount == DecliantionNumber.Plural) ? true : false);
                                 if (noun == null)
@@ -173,8 +166,8 @@ namespace Flaksator
                                 // TODO: implement some shuffle algorithm
                                 while (form == null && tries++ < 10)
                                 {
-                                    noun = NounCollection.Collection.GetNoun(genre,
-                                    null,
+                                    noun = NounCollection.Collection.GetNounEx(genre,
+                                    categoryIds,
                                     (amount == DecliantionNumber.Singular) ? true : false,
                                     (amount == DecliantionNumber.Plural) ? true : false);
 

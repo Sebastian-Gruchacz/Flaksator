@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>LegacyGroups.Specs</RootNamespace>
+    <AssemblyName>LegacyGroups.Specs</AssemblyName>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OldCode\Flaksator\Flaksator.csproj" />
+    <ProjectReference Include="..\..\OldCode\Fleksator\Fleksator.csproj" />
+  </ItemGroup>
+</Project>

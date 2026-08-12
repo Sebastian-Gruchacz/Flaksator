@@ -7,7 +7,9 @@ using System.Text;
 using System.Windows.Forms;
 
 using SharpDevs.Fleksator;
+#if NETFRAMEWORK
 using SharpDevs.Fleksator.Edit;
+#endif
 
 //using SpeechLib;
 
@@ -22,14 +24,22 @@ namespace Flaksator
 
         private void nounsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#if NETFRAMEWORK
             FormEditNouns frm = new FormEditNouns();
             frm.Show();
+#else
+            MessageBox.Show("The legacy dictionary editor is available in the .NET Framework build.");
+#endif
         }
 
         private void adjectivesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#if NETFRAMEWORK
             FormEditAdjectives frm = new FormEditAdjectives();
             frm.Show();
+#else
+            MessageBox.Show("The legacy dictionary editor is available in the .NET Framework build.");
+#endif
         }
 
 

@@ -157,7 +157,8 @@ namespace SharpDevs.Fleksator
         {
             List<Noun> searchResults = this.nouns.FindAll(p => (genre == null || p.Genre == genre)
                 && (categoryIds == null || categoryIds.Count == 0 || p.Categories.Exists(d => categoryIds.Contains(d)))
-                && (!shallSupportSingular || p.CanBeSingular));
+                && (!shallSupportSingular || p.CanBeSingular)
+                && (!shallSupportPlural || p.CanBePlural));
 
             if (searchResults == null || searchResults.Count < 1)
                 return null;

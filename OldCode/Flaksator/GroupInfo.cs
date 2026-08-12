@@ -23,9 +23,21 @@ namespace Flaksator
 
         private List<string> codes = new List<string>();
         private List<int> indexes = new List<int>();
+        private Dictionary<int, string> definitionErrors = new Dictionary<int, string>();
+        private Dictionary<int, List<int>> categoryIds = new Dictionary<int, List<int>>();
 
         public void AddCode(int indexInString, string code)
         {
+            string grammarCode;
+            List<int> categories;
+            if (!WordFormatterParser.TryParse(code, out grammarCode, out categories))
+            {
+                this.AddInvalidCode(indexInString, code, "{INVALID_GROUP_FORMATTER}");
+                return;
+            }
+
+            code = grammarCode;
+
             // now can have only Noun and several adjectives and nouns describing it
             GrammaticalPart part = GrammaticalPart._Unknown;
 
@@ -42,16 +54,46 @@ namespace Flaksator
                     break;
             }
 
+            if (part == GrammaticalPart._Unknown)
+            {
+                this.AddInvalidCode(indexInString, code, "{INVALID_GROUP_FORMATTER}");
+                return;
+            }
+
+            if ((part == GrammaticalPart.Noun && code.Length != 4) ||
+                (part == GrammaticalPart.Adjective && code.Length != 5))
+            {
+                this.AddInvalidCode(indexInString, code, "{INVALID_GROUP_FORMATTER}");
+                return;
+            }
+
+            if (part == GrammaticalPart.Verb)
+            {
+                this.AddInvalidCode(indexInString, code, "{UNSUPPORTED_GROUP_VERB}");
+                return;
+            }
+
             if (part == GrammaticalPart.Noun)
             {
                 if (this.nounIndex >= 0)
-                    throw new ArgumentException("Only one Noun is possible in group", "code");
+                {
+                    this.AddInvalidCode(indexInString, code, "{GROUP_HAS_MULTIPLE_NOUNS}");
+                    return;
+                }
 
                 this.nounIndex = this.codes.Count;
             }
 
             this.codes.Add(code);
             this.indexes.Add(indexInString);
+            this.categoryIds[indexInString] = categories;
+        }
+
+        private void AddInvalidCode(int indexInString, string code, string error)
+        {
+            this.codes.Add(code);
+            this.indexes.Add(indexInString);
+            this.definitionErrors[indexInString] = error;
         }
 
         private int nounIndex = -1;
@@ -59,11 +101,14 @@ namespace Flaksator
         public bool Analyze()
         {
             this.results.Clear();
+            foreach (KeyValuePair<int, string> definitionError in this.definitionErrors)
+                this.results[definitionError.Key] = definitionError.Value;
 
             // get noun...
             if (this.nounIndex < 0)
             {
                 // cannot analyze groups without noun...
+                this.FillMissingResults("{GROUP_REQUIRES_NOUN}");
                 return false;
             }
 
@@ -76,38 +121,50 @@ namespace Flaksator
                     ngenre == GrammaticalGender._Unknown)
             {
                 this.results.Add(this.indexes[this.nounIndex], "{NOUN_DEFINITION_INCOMPLETE}");
+                this.FillMissingResults("{GROUP_NOUN_INVALID}");
                 return false;
             }
 
-            Noun noun = NounCollection.Collection.GetRandomNoun(ngenre);
+            Noun noun = NounCollection.Collection.GetNounEx(
+                ngenre,
+                this.categoryIds[this.indexes[this.nounIndex]],
+                namount == DecliantionNumber.Singular,
+                namount == DecliantionNumber.Plural);
             if (noun == null)
             {
                 this.results.Add(this.indexes[this.nounIndex], "{NO_VALID_NOUN}");
-                // TODO: fill rest of the placeholders
+                this.FillMissingResults("{GROUP_NOUN_UNAVAILABLE}");
                 return false;
             }
             else
             {
-                if (namount == DecliantionNumber.Plural && !noun.CanBePlural)
-                    namount = DecliantionNumber.Singular;
-                else if (namount == DecliantionNumber.Singular && !noun.CanBeSingular)
-                    namount = DecliantionNumber.Plural;
-
                 string nounStr =  NounDecliner.Decliner.MakeWord(noun, naCase, namount);
+                bool error = this.definitionErrors.Count > 0;
                 if (!string.IsNullOrEmpty(nounStr))
                     this.results.Add(this.indexes[this.nounIndex], nounStr);
                 else
+                {
                     this.results.Add(this.indexes[this.nounIndex], "{CANT_DECLINE_NOUN}");
+                    error = true;
+                }
 
-                bool error = false;
+                GrammaticalGender agreementGender = noun.HasIrregularGenre
+                    ? noun.IrregularGenre
+                    : noun.Genre;
 
                 for (int codeIndex = 0; codeIndex < this.codes.Count; codeIndex++)
                 {
                     if (codeIndex == this.nounIndex)
                         continue;
 
-                    string code = this.codes[codeIndex];
                     int formatIndex = this.indexes[codeIndex];
+                    if (this.definitionErrors.ContainsKey(formatIndex))
+                    {
+                        error = true;
+                        continue;
+                    }
+
+                    string code = this.codes[codeIndex];
 
                     switch (code[0])
                     {
@@ -128,9 +185,23 @@ namespace Flaksator
                                         amount = namount;
 
                                     if (genre == GrammaticalGender._Unknown)
-                                        genre = ngenre;
+                                        genre = agreementGender;
 
-                                    Adjective adj = AdjectiveCollection.Collection.GetRandomAdjective();
+                                    if (aCase == InflectionCase._Unknown ||
+                                        amount == DecliantionNumber._Unknown ||
+                                        genre == GrammaticalGender._Unknown ||
+                                        level == AdjectiveLevel._Unknown)
+                                    {
+                                        this.results.Add(formatIndex, "{ADJECTIVE_DEFINITION_INCOMPLETE}");
+                                        error = true;
+                                        continue;
+                                    }
+
+                                    Adjective adj = AdjectiveCollection.Collection.GetAdjective(candidate =>
+                                        WordFormatterParser.MatchesCategories(candidate.Categories,
+                                            this.categoryIds[formatIndex]) &&
+                                        AdjectiveDecliner.Decliner.MakeWord(candidate, genre, aCase,
+                                            amount, level) != null);
                                     if (adj == null)
                                     {
                                         this.results.Add(formatIndex, "{NO_VALID_ADJECTIVE}");
@@ -138,32 +209,14 @@ namespace Flaksator
                                         continue;
                                     }
 
-                                    string form = AdjectiveDecliner.Decliner.MakeWord(adj, noun, aCase,
+                                    string form = AdjectiveDecliner.Decliner.MakeWord(adj, genre, aCase,
                                         amount, level);
-
-                                    if (form != null)
-                                    {
-                                        this.results.Add(formatIndex, form);
-                                        continue;
-                                    }
-
-                                    int tries = 0;
-                                    // try randomizing little more...
-                                    // TODO: implement some shuffle algorithm
-                                    while (form == null && tries++ < 10)
-                                    {
-                                        adj = AdjectiveCollection.Collection.GetRandomAdjective();
-                                        form = AdjectiveDecliner.Decliner.MakeWord(adj, noun, aCase,
-                                            amount, level);
-                                    }
-                                    if (tries >= 10)
-                                    {
-                                        this.results.Add(formatIndex, "{NO_VALID_ADJECTIVE}");
-                                        error = true;
-                                        continue;
-                                    }
-
                                     this.results.Add(formatIndex, form);
+                                }
+                                else
+                                {
+                                    this.results[formatIndex] = "{INVALID_GROUP_FORMATTER}";
+                                    error = true;
                                 }
                                 break;
                             }
@@ -174,10 +227,16 @@ namespace Flaksator
 
                 }
 
-                return !error;
+                this.FillMissingResults("{INVALID_GROUP_FORMATTER}");
+                return !error && this.results.Count == this.indexes.Count;
             }
+        }
 
-            return true;
+        private void FillMissingResults(string error)
+        {
+            foreach (int index in this.indexes)
+                if (!this.results.ContainsKey(index))
+                    this.results[index] = error;
         }
 
         private Dictionary<int, string> results = new Dictionary<int,string>();
