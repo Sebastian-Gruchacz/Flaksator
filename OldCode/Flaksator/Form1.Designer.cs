@@ -33,11 +33,13 @@ namespace Flaksator
             this.nounsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjectivesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verbsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.versesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bGenSong = new System.Windows.Forms.Button();
             this.textResults = new SharpDevs.Helpers.Presentation.StandardTextBox();
             this.bTitleGen = new System.Windows.Forms.Button();
             this.bClear = new System.Windows.Forms.Button();
             this.bSpeak = new System.Windows.Forms.Button();
+            this.bGenerationFilters = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +58,8 @@ namespace Flaksator
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nounsToolStripMenuItem,
             this.adjectivesToolStripMenuItem,
-            this.verbsToolStripMenuItem});
+            this.verbsToolStripMenuItem,
+            this.versesToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.editToolStripMenuItem.Text = "&Edit";
@@ -80,6 +83,14 @@ namespace Flaksator
             this.verbsToolStripMenuItem.Name = "verbsToolStripMenuItem";
             this.verbsToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.verbsToolStripMenuItem.Text = "&Verbs...";
+            this.verbsToolStripMenuItem.Click += new System.EventHandler(this.verbsToolStripMenuItem_Click);
+            //
+            // versesToolStripMenuItem
+            //
+            this.versesToolStripMenuItem.Name = "versesToolStripMenuItem";
+            this.versesToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.versesToolStripMenuItem.Text = "&Verses...";
+            this.versesToolStripMenuItem.Click += new System.EventHandler(this.versesToolStripMenuItem_Click);
             // 
             // bGenSong
             // 
@@ -90,6 +101,16 @@ namespace Flaksator
             this.bGenSong.Text = "Generate Song";
             this.bGenSong.UseVisualStyleBackColor = true;
             this.bGenSong.Click += new System.EventHandler(this.bGenSong_Click);
+            //
+            // bGenerationFilters
+            //
+            this.bGenerationFilters.Location = new System.Drawing.Point(294, 36);
+            this.bGenerationFilters.Name = "bGenerationFilters";
+            this.bGenerationFilters.Size = new System.Drawing.Size(150, 23);
+            this.bGenerationFilters.TabIndex = 6;
+            this.bGenerationFilters.Text = "Wykluczenia...";
+            this.bGenerationFilters.UseVisualStyleBackColor = true;
+            this.bGenerationFilters.Click += new System.EventHandler(this.bGenerationFilters_Click);
             // 
             // textResults
             // 
@@ -141,6 +162,7 @@ namespace Flaksator
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(917, 478);
             this.Controls.Add(this.bSpeak);
+            this.Controls.Add(this.bGenerationFilters);
             this.Controls.Add(this.bClear);
             this.Controls.Add(this.bTitleGen);
             this.Controls.Add(this.textResults);
@@ -165,11 +187,12 @@ namespace Flaksator
         private System.Windows.Forms.ToolStripMenuItem nounsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem adjectivesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verbsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem versesToolStripMenuItem;
         private System.Windows.Forms.Button bGenSong;
         private SharpDevs.Helpers.Presentation.StandardTextBox textResults;
         private System.Windows.Forms.Button bTitleGen;
         private System.Windows.Forms.Button bClear;
         private System.Windows.Forms.Button bSpeak;
+        private System.Windows.Forms.Button bGenerationFilters;
     }
 }
-

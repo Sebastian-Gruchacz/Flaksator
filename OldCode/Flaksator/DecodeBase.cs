@@ -7,7 +7,7 @@ using SharpDevs.Fleksator.Grammar;
 
 namespace Flaksator
 {
-    class DecodeBase
+    public class DecodeBase
     {
         protected string DecodeLine(string verse)
         {
@@ -54,7 +54,7 @@ namespace Flaksator
 
             // now decoding...
             string[] results = new string[descriptors.Count];
-            Dictionary<int, GroupInfo> groups = new Dictionary<int, GroupInfo>();
+            Dictionary<string, GroupInfo> groups = new Dictionary<string, GroupInfo>();
 
             for (int i = 0; i < descriptors.Count; i++)
             {
@@ -65,21 +65,20 @@ namespace Flaksator
                 if (index >= 0)
                 {
                     // this is group
-                    string groupStr = code.Substring(0, index);
-                    int groupNumber = -1;
-                    if (!int.TryParse(groupStr, out groupNumber))
+                    string groupName = code.Substring(0, index);
+                    if (!WordFormatterParser.IsValidGroupName(groupName))
                     {
                         results[i] = "{INVALID_GROUP_FORMATTER}";
                     }
                     else
                     {
                         GroupInfo info = null;
-                        if (groups.ContainsKey(groupNumber))
-                            info = groups[groupNumber];
+                        if (groups.ContainsKey(groupName))
+                            info = groups[groupName];
                         else
                         {
-                            info = new GroupInfo(groupNumber);
-                            groups.Add(groupNumber, info);
+                            info = new GroupInfo(groupName);
+                            groups.Add(groupName, info);
                         }
 
                         info.AddCode(i, code.Substring(index + 1));
@@ -106,8 +105,13 @@ namespace Flaksator
             return string.Format(result, results);
         }
 
-        private string Decode(string code)
+        private string Decode(string formatter)
         {
+            string code;
+            List<int> categoryIds;
+            if (!WordFormatterParser.TryParse(formatter, out code, out categoryIds))
+                return "{INVALID_FORMATTER}";
+
             if (!string.IsNullOrEmpty(code))
             {
                 switch (code[0])
@@ -121,25 +125,13 @@ namespace Flaksator
                                 GrammaticalGender genre = EnumHelper.GetWordGenre(code[3]);
                                 AdjectiveLevel level = EnumHelper.GetAdjectiveLevel(code[4]);
 
-                                Adjective adj = AdjectiveCollection.Collection.GetRandomAdjective();
+                                Adjective adj = AdjectiveCollection.Collection.GetAdjective(candidate =>
+                                    WordFormatterParser.MatchesCategories(candidate.Categories, categoryIds) &&
+                                    AdjectiveDecliner.Decliner.MakeWord(candidate, genre, aCase, amount, level) != null);
                                 if (adj == null)
                                     return "{NO_VALID_ADJECTIVE}";
 
                                 string form = AdjectiveDecliner.Decliner.MakeWord(adj, genre, aCase, amount, level);
-                                if (form != null)
-                                    return form;
-
-                                int tries = 0;
-                                // try randomizing little more...
-                                // TODO: implement some shuffle algorithm
-                                while (form == null && tries++ < 10)
-                                {
-                                    adj = AdjectiveCollection.Collection.GetRandomAdjective();
-                                    form = AdjectiveDecliner.Decliner.MakeWord(adj, genre, aCase, amount, level);
-                                }
-                                if (tries >= 10)
-                                    return "{NO_VALID_ADJECTIVE}"; // 10 tries - probably no valid word in dic
-
                                 return form;
                             }
                             break;
@@ -152,8 +144,8 @@ namespace Flaksator
                                 DecliantionNumber amount = EnumHelper.GetWordAmount(code[2]);
                                 GrammaticalGender genre = EnumHelper.GetWordGenre(code[3]);
 
-                                Noun noun = NounCollection.Collection.GetNoun(genre,
-                                    null,
+                                Noun noun = NounCollection.Collection.GetNounEx(genre,
+                                    categoryIds,
                                     (amount == DecliantionNumber.Singular) ? true : false,
                                     (amount == DecliantionNumber.Plural) ? true : false);
                                 if (noun == null)
@@ -173,8 +165,8 @@ namespace Flaksator
                                 // TODO: implement some shuffle algorithm
                                 while (form == null && tries++ < 10)
                                 {
-                                    noun = NounCollection.Collection.GetNoun(genre,
-                                    null,
+                                    noun = NounCollection.Collection.GetNounEx(genre,
+                                    categoryIds,
                                     (amount == DecliantionNumber.Singular) ? true : false,
                                     (amount == DecliantionNumber.Plural) ? true : false);
 
@@ -189,11 +181,67 @@ namespace Flaksator
 
                             break;
                         }
+                    case 'V': // Verb (czasownik)
+                        {
+                            if (code.Length == 4 || code.Length == 5)
+                            {
+                                VerbTense tense = VerbGrammar.GetTense(code[1]);
+                                GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
+                                DecliantionNumber number = EnumHelper.GetWordAmount(code[3]);
+                                GrammaticalGender gender = code.Length == 5
+                                    ? EnumHelper.GetWordGenre(code[4])
+                                    : GrammaticalGender._Unknown;
+                                if (tense == VerbTense._Unknown || person == GrammaticalPerson._Unknown ||
+                                    number == DecliantionNumber._Unknown ||
+                                    (tense == VerbTense.Past && gender == GrammaticalGender._Unknown))
+                                    return "{VERB_DEFINITION_INCOMPLETE}";
+
+                                Verb verb = VerbCollection.Collection.GetVerb(candidate =>
+                                    candidate.CanBeActive &&
+                                    !candidate.IsReflexive &&
+                                    WordFormatterParser.MatchesCategories(candidate.Categories, categoryIds) &&
+                                    VerbConjurer.Conjurer.MakeWord(candidate, tense, person, number,
+                                        gender) != null);
+                                if (verb == null)
+                                    return "{NO_VALID_VERB}";
+
+                                return VerbConjurer.Conjurer.MakeWord(verb, tense, person, number,
+                                    gender);
+                            }
+                            break;
+                        }
+                    case 'P': // Pronoun (zaimek)
+                        {
+                            if (code.Length == 5 || code.Length == 6)
+                            {
+                                if (code.Length == 6 && code[5] != 'P')
+                                    return "{INVALID_FORMATTER}";
+
+                                InflectionCase aCase = EnumHelper.GetWordCase(code[1]);
+                                GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
+                                DecliantionNumber number = EnumHelper.GetWordAmount(code[3]);
+                                GrammaticalGender gender = EnumHelper.GetWordGenre(code[4]);
+                                PronounVariant variant = code.Length == 6
+                                    ? PronounVariant.Prepositional
+                                    : PronounVariant.Neutral;
+                                if (aCase == InflectionCase._Unknown ||
+                                    person == GrammaticalPerson._Unknown ||
+                                    number == DecliantionNumber._Unknown ||
+                                    gender == GrammaticalGender._Unknown)
+                                    return "{PRONOUN_DEFINITION_INCOMPLETE}";
+
+                                Pronoun pronoun = PronounCollection.Collection.GetPronoun(candidate =>
+                                    PronounDecliner.Decliner.MakeWord(candidate, aCase, person, number,
+                                        gender, variant) != null);
+                                if (pronoun == null)
+                                    return "{NO_VALID_PRONOUN}";
+
+                                return PronounDecliner.Decliner.MakeWord(pronoun, aCase, person, number,
+                                    gender, variant);
+                            }
+                            break;
+                        }
                     //case 'C': // Counter (liczebnik)
-                    //    {
-                    //        break;
-                    //    }
-                    //case 'V': // Verb (czsownik)
                     //    {
                     //        break;
                     //    }

@@ -7,7 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 
 using SharpDevs.Fleksator;
+#if NETFRAMEWORK
 using SharpDevs.Fleksator.Edit;
+using Flaksator.Edit;
+#endif
 
 //using SpeechLib;
 
@@ -22,14 +25,65 @@ namespace Flaksator
 
         private void nounsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#if NETFRAMEWORK
             FormEditNouns frm = new FormEditNouns();
             frm.Show();
+#else
+            MessageBox.Show("The legacy dictionary editor is available in the .NET Framework build.");
+#endif
         }
 
         private void adjectivesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#if NETFRAMEWORK
             FormEditAdjectives frm = new FormEditAdjectives();
             frm.Show();
+#else
+            MessageBox.Show("The legacy dictionary editor is available in the .NET Framework build.");
+#endif
+        }
+
+        private void verbsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+#if NETFRAMEWORK
+            FormEditVerbs frm = new FormEditVerbs();
+            frm.Show();
+#else
+            MessageBox.Show("The legacy dictionary editor is available in the .NET Framework build.");
+#endif
+        }
+
+        private void versesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+#if NETFRAMEWORK
+            FormEditVerses frm = new FormEditVerses();
+            frm.Show();
+#else
+            MessageBox.Show("The legacy verse editor is available in the .NET Framework build.");
+#endif
+        }
+
+        private void bGenerationFilters_Click(object sender, EventArgs e)
+        {
+#if NETFRAMEWORK
+            using (FormGenerationFilters form = new FormGenerationFilters())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                    this.UpdateGenerationFilterCaption();
+            }
+#else
+            MessageBox.Show("Generation category filters are available in the .NET Framework build.");
+#endif
+        }
+
+        private void UpdateGenerationFilterCaption()
+        {
+            int count = GenerationCategoryFilter.ExcludedNounCategories.Count +
+                GenerationCategoryFilter.ExcludedAdjectiveCategories.Count +
+                GenerationCategoryFilter.ExcludedVerbCategories.Count;
+            this.bGenerationFilters.Text = count == 0
+                ? "Wykluczenia..."
+                : "Wykluczenia (" + count + ")...";
         }
 
 
@@ -39,6 +93,8 @@ namespace Flaksator
             WordCategories.Categories.LoadFromFile(".\\DataFiles\\Categories.ini");
             AdjectiveCollection.Collection.LoadFromFile(".\\DataFiles\\Adjectives.txt");
             NounCollection.Collection.LoadFromFile(".\\DataFiles\\Nouns.txt");
+            VerbCollection.Collection.LoadFromFile(".\\DataFiles\\Verbs.txt");
+            PronounCollection.Collection.LoadFromFile(".\\DataFiles\\Pronouns.txt");
             NounDecliner.Decliner.LoadPostfixes(".\\DataFiles\\NounPostfixes.txt");
 
 
@@ -50,6 +106,7 @@ namespace Flaksator
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             NounCollection.Collection.SaveToFile(".\\DataFiles\\Nouns.txt");
+            VerbCollection.Collection.SaveToFile(".\\DataFiles\\Verbs.txt");
             // TODO: other saves
         }
 

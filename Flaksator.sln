@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grammar.Tests", "Tests\Gram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataOperations.Tests", "Tests\DataOperations.Tests\DataOperations.Tests.csproj", "{C9676E9A-4E88-442B-8A22-B4555A477F97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyGroups.Specs", "Tests\LegacyGroups.Specs\LegacyGroups.Specs.csproj", "{C94D19C0-8B44-49F5-A979-60E2D1B03D54}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3CA4A895-0664-4D26-8536-929947F61154}"
 	ProjectSection(SolutionItems) = preProject
 		Data\Flaksator.db = Data\Flaksator.db
@@ -98,6 +100,10 @@ Global
 		{C9676E9A-4E88-442B-8A22-B4555A477F97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9676E9A-4E88-442B-8A22-B4555A477F97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9676E9A-4E88-442B-8A22-B4555A477F97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C94D19C0-8B44-49F5-A979-60E2D1B03D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C94D19C0-8B44-49F5-A979-60E2D1B03D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C94D19C0-8B44-49F5-A979-60E2D1B03D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C94D19C0-8B44-49F5-A979-60E2D1B03D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +119,6 @@ Global
 		{6F3858C7-10EC-4B8E-942C-EB449CC4D70D} = {017CCCB2-2EBD-4E9C-8D79-9A816BA7655C}
 		{17C58B1A-5183-460E-8832-0EBCDFB6FDDA} = {0A070A46-3706-457A-8B7E-532C9B3C1F7D}
 		{C9676E9A-4E88-442B-8A22-B4555A477F97} = {0A070A46-3706-457A-8B7E-532C9B3C1F7D}
+		{C94D19C0-8B44-49F5-A979-60E2D1B03D54} = {0A070A46-3706-457A-8B7E-532C9B3C1F7D}
 	EndGlobalSection
 EndGlobal

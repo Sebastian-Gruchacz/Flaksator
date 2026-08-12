@@ -93,6 +93,8 @@ namespace SharpDevs.Fleksator
                     return 'N';
                 case GrammaticalPart.Verb:
                     return 'V';
+                case GrammaticalPart.Pronoun:
+                    return 'P';
             }
 
             return '?';

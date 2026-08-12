@@ -1,6 +1,6 @@
 namespace SharpDevs.Fleksator.Grammar
 {
-    public class Verb : ConjugativeGrammaticalWord
+    public partial class Verb : ConjugativeGrammaticalWord
     {
         public Verb()
         {
