@@ -53,6 +53,21 @@ namespace Flaksator
 
             code = grammarCode;
 
+            if (code == "R")
+            {
+                if (this.reflexiveIndex >= 0)
+                {
+                    this.AddInvalidCode(indexInString, code, "{GROUP_HAS_MULTIPLE_REFLEXIVE_PARTICLES}");
+                    return;
+                }
+
+                this.reflexiveIndex = this.codes.Count;
+                this.codes.Add(code);
+                this.indexes.Add(indexInString);
+                this.categoryIds[indexInString] = categories;
+                return;
+            }
+
             // now can have only Noun and several adjectives and nouns describing it
             GrammaticalPart part = GrammaticalPart._Unknown;
 
@@ -66,6 +81,10 @@ namespace Flaksator
                     break;
                 case 'V':
                     part = GrammaticalPart.Verb;
+                    this.verbCount++;
+                    break;
+                case 'P':
+                    part = GrammaticalPart.Pronoun;
                     break;
             }
 
@@ -77,7 +96,8 @@ namespace Flaksator
 
             if ((part == GrammaticalPart.Noun && code.Length != 4) ||
                 (part == GrammaticalPart.Adjective && code.Length != 5) ||
-                (part == GrammaticalPart.Verb && code.Length != 4))
+                (part == GrammaticalPart.Verb && code.Length != 4 && code.Length != 5) ||
+                (part == GrammaticalPart.Pronoun && code.Length != 5 && code.Length != 6))
             {
                 this.AddInvalidCode(indexInString, code, "{INVALID_GROUP_FORMATTER}");
                 return;
@@ -107,12 +127,23 @@ namespace Flaksator
         }
 
         private int nounIndex = -1;
+        private int reflexiveIndex = -1;
+        private int verbCount;
 
         public bool Analyze()
         {
             this.results.Clear();
             foreach (KeyValuePair<int, string> definitionError in this.definitionErrors)
                 this.results[definitionError.Key] = definitionError.Value;
+
+            string reflexiveDefinitionError = null;
+            if (this.reflexiveIndex >= 0 && this.verbCount != 1)
+            {
+                reflexiveDefinitionError = this.verbCount == 0
+                    ? "{GROUP_REFLEXIVE_REQUIRES_VERB}"
+                    : "{GROUP_REFLEXIVE_REQUIRES_SINGLE_VERB}";
+                this.results[this.indexes[this.reflexiveIndex]] = reflexiveDefinitionError;
+            }
 
             // get noun...
             if (this.nounIndex < 0)
@@ -149,7 +180,7 @@ namespace Flaksator
             else
             {
                 string nounStr =  NounDecliner.Decliner.MakeWord(noun, naCase, namount);
-                bool error = this.definitionErrors.Count > 0;
+                bool error = this.definitionErrors.Count > 0 || reflexiveDefinitionError != null;
                 if (!string.IsNullOrEmpty(nounStr))
                     this.results.Add(this.indexes[this.nounIndex], nounStr);
                 else
@@ -234,16 +265,29 @@ namespace Flaksator
 
                         case 'V':   // Verb (czasownik)
                             {
+                                if (reflexiveDefinitionError != null)
+                                {
+                                    this.results.Add(formatIndex, "{GROUP_REFLEXIVE_AMBIGUOUS}");
+                                    error = true;
+                                    continue;
+                                }
+
                                 VerbTense tense = VerbGrammar.GetTense(code[1]);
                                 GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
                                 DecliantionNumber amount = EnumHelper.GetWordAmount(code[3]);
+                                GrammaticalGender gender = code.Length == 5
+                                    ? EnumHelper.GetWordGenre(code[4])
+                                    : GrammaticalGender._Unknown;
 
                                 if (person == GrammaticalPerson._Unknown)
                                     person = GrammaticalPerson.Third;
                                 if (amount == DecliantionNumber._Unknown)
                                     amount = namount;
+                                if (gender == GrammaticalGender._Unknown)
+                                    gender = agreementGender;
 
-                                if (tense == VerbTense._Unknown || amount == DecliantionNumber._Unknown)
+                                if (tense == VerbTense._Unknown || amount == DecliantionNumber._Unknown ||
+                                    (tense == VerbTense.Past && gender == GrammaticalGender._Unknown))
                                 {
                                     this.results.Add(formatIndex, "{VERB_DEFINITION_INCOMPLETE}");
                                     error = true;
@@ -251,8 +295,12 @@ namespace Flaksator
                                 }
 
                                 Verb verb = VerbCollection.Collection.GetVerb(candidate =>
+                                    candidate.CanBeActive &&
+                                    candidate.IsReflexive == (this.reflexiveIndex >= 0) &&
+                                    WordFormatterParser.MatchesCategories(candidate.Categories,
+                                        this.categoryIds[formatIndex]) &&
                                     VerbConjurer.Conjurer.MakeWord(candidate, tense, person, amount,
-                                        agreementGender) != null);
+                                        gender) != null);
                                 if (verb == null)
                                 {
                                     this.results.Add(formatIndex, "{NO_VALID_VERB}");
@@ -261,7 +309,61 @@ namespace Flaksator
                                 }
 
                                 string form = VerbConjurer.Conjurer.MakeWord(verb, tense, person, amount,
-                                    agreementGender);
+                                    gender);
+                                this.results.Add(formatIndex, form);
+                                break;
+                            }
+                        case 'R':   // Reflexive particle (partykuła zwrotna)
+                            {
+                                if (!this.results.ContainsKey(formatIndex))
+                                    this.results.Add(formatIndex, "się");
+                                break;
+                            }
+                        case 'P':   // Pronoun (zaimek)
+                            {
+                                if (code.Length == 6 && code[5] != 'P')
+                                {
+                                    this.results.Add(formatIndex, "{INVALID_GROUP_FORMATTER}");
+                                    error = true;
+                                    continue;
+                                }
+
+                                InflectionCase aCase = EnumHelper.GetWordCase(code[1]);
+                                GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
+                                DecliantionNumber amount = EnumHelper.GetWordAmount(code[3]);
+                                GrammaticalGender gender = EnumHelper.GetWordGenre(code[4]);
+                                PronounVariant variant = code.Length == 6
+                                    ? PronounVariant.Prepositional
+                                    : PronounVariant.Neutral;
+
+                                if (person == GrammaticalPerson._Unknown)
+                                    person = GrammaticalPerson.Third;
+                                if (amount == DecliantionNumber._Unknown)
+                                    amount = namount;
+                                if (gender == GrammaticalGender._Unknown)
+                                    gender = agreementGender;
+
+                                if (aCase == InflectionCase._Unknown ||
+                                    amount == DecliantionNumber._Unknown ||
+                                    gender == GrammaticalGender._Unknown)
+                                {
+                                    this.results.Add(formatIndex, "{PRONOUN_DEFINITION_INCOMPLETE}");
+                                    error = true;
+                                    continue;
+                                }
+
+                                Pronoun pronoun = PronounCollection.Collection.GetPronoun(candidate =>
+                                    PronounDecliner.Decliner.MakeWord(candidate, aCase, person, amount,
+                                        gender, variant) != null);
+                                if (pronoun == null)
+                                {
+                                    this.results.Add(formatIndex, "{NO_VALID_PRONOUN}");
+                                    error = true;
+                                    continue;
+                                }
+
+                                string form = PronounDecliner.Decliner.MakeWord(pronoun, aCase, person,
+                                    amount, gender, variant);
                                 this.results.Add(formatIndex, form);
                                 break;
                             }

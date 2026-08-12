@@ -48,12 +48,22 @@ namespace SharpDevs.Fleksator
             }
         }
 
+        public void SaveToFile(string filePath)
+        {
+            using (TextWriter writer = new StreamWriter(filePath, false, Encoding.Unicode))
+            {
+                foreach (Verb verb in this.verbs)
+                    writer.WriteLine(this.serializer.Write(verb));
+            }
+        }
+
         public Verb GetVerb(Predicate<Verb> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException("predicate");
 
-            List<Verb> matches = this.verbs.FindAll(predicate);
+            List<Verb> matches = this.verbs.FindAll(candidate =>
+                GenerationCategoryFilter.AllowsVerb(candidate.Categories) && predicate(candidate));
             return matches.Count == 0 ? null : matches[this.random.Next(matches.Count)];
         }
     }

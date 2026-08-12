@@ -87,7 +87,9 @@ namespace SharpDevs.Fleksator
 
         public Adjective GetRandomAdjective()
         {
-            return this.adjectives[this.rnd.Next(0, this.adjectives.Count)];
+            List<Adjective> matches = this.adjectives.FindAll(
+                item => GenerationCategoryFilter.AllowsAdjective(item.Categories));
+            return matches.Count == 0 ? null : matches[this.rnd.Next(0, matches.Count)];
         }
 
         public Adjective GetAdjective(Predicate<Adjective> predicate)
@@ -95,7 +97,8 @@ namespace SharpDevs.Fleksator
             if (predicate == null)
                 throw new ArgumentNullException("predicate");
 
-            List<Adjective> searchResults = this.adjectives.FindAll(predicate);
+            List<Adjective> searchResults = this.adjectives.FindAll(candidate =>
+                GenerationCategoryFilter.AllowsAdjective(candidate.Categories) && predicate(candidate));
             if (searchResults.Count < 1)
                 return null;
 

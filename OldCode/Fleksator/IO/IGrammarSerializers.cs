@@ -9,5 +9,6 @@ namespace SharpDevs.Fleksator.IO
     {
         IGrammaticalWordSerializer<Noun> NounSerializer { get; }
         IGrammaticalWordSerializer<Verb> VerbSerializer { get; }
+        IGrammaticalWordSerializer<Pronoun> PronounSerializer { get; }
     }
 }

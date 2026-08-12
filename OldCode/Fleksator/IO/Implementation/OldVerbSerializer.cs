@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SharpDevs.Fleksator;
 using SharpDevs.Fleksator.Grammar;
 
 namespace SharpDevs.Fleksator.IO.Implementation
@@ -23,6 +24,56 @@ namespace SharpDevs.Fleksator.IO.Implementation
             for (int i = 1; i < elements.Length; i++)
             {
                 string token = elements[i];
+                if (token == "R")
+                {
+                    verb.IsReflexive = true;
+                    continue;
+                }
+
+                if (token.StartsWith("CAT="))
+                {
+                    foreach (string categoryToken in token.Substring(4).Split(','))
+                    {
+                        int categoryId;
+                        if (!int.TryParse(categoryToken, out categoryId) || categoryId <= 0)
+                            return null;
+                        if (!verb.Categories.Contains(categoryId))
+                            verb.Categories.Add(categoryId);
+                    }
+                    continue;
+                }
+
+                if (token.StartsWith("CONJ="))
+                {
+                    int conjugation;
+                    if (!int.TryParse(token.Substring(5), out conjugation) || conjugation < 0)
+                        return null;
+                    verb.ConjugationNumber = conjugation;
+                    continue;
+                }
+
+                if (token.StartsWith("ASPECT="))
+                {
+                    switch (token.Substring(7))
+                    {
+                        case "I": verb.Aspect = VerbAspect.Imperfective; break;
+                        case "P": verb.Aspect = VerbAspect.Perfective; break;
+                        case "B": verb.Aspect = VerbAspect.Biaspectual; break;
+                        default: return null;
+                    }
+                    continue;
+                }
+
+                if (token.StartsWith("VOICE="))
+                {
+                    string voices = token.Substring(6);
+                    if (voices != "A" && voices != "P" && voices != "AP")
+                        return null;
+                    verb.CanBeActive = voices.IndexOf('A') >= 0;
+                    verb.CanBePassive = voices.IndexOf('P') >= 0;
+                    continue;
+                }
+
                 int separator = token.IndexOf('=');
                 if (separator < 0)
                     continue;
@@ -53,6 +104,11 @@ namespace SharpDevs.Fleksator.IO.Implementation
                 });
             }
 
+            string validationError;
+            if (!VerbFormValidator.TryValidate(verb.Aspect, verb.Forms, out validationError))
+                return null;
+
+            verb.DisplayName = verb.Infinitive + (verb.IsReflexive ? " się" : string.Empty);
             return verb;
         }
 
@@ -60,8 +116,40 @@ namespace SharpDevs.Fleksator.IO.Implementation
         {
             if (word == null)
                 throw new ArgumentNullException("word");
+            string validationError;
+            if (!VerbFormValidator.TryValidate(word.Aspect, word.Forms, out validationError))
+                throw new InvalidOperationException(validationError);
 
             StringBuilder result = new StringBuilder(word.Infinitive);
+            if (word.IsReflexive)
+                result.Append("|R");
+            if (word.Categories.Count > 0)
+            {
+                result.Append("|CAT=");
+                for (int i = 0; i < word.Categories.Count; i++)
+                {
+                    if (i > 0)
+                        result.Append(',');
+                    result.Append(word.Categories[i]);
+                }
+            }
+            if (word.ConjugationNumber > 0)
+                result.Append("|CONJ=").Append(word.ConjugationNumber);
+            switch (word.Aspect)
+            {
+                case VerbAspect.Imperfective: result.Append("|ASPECT=I"); break;
+                case VerbAspect.Perfective: result.Append("|ASPECT=P"); break;
+                case VerbAspect.Biaspectual: result.Append("|ASPECT=B"); break;
+            }
+            if (!word.CanBeActive || word.CanBePassive)
+            {
+                result.Append("|VOICE=");
+                if (word.CanBeActive)
+                    result.Append('A');
+                if (word.CanBePassive)
+                    result.Append('P');
+            }
+
             foreach (VerbForm form in word.Forms)
             {
                 result.Append('|');

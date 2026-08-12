@@ -124,7 +124,9 @@ namespace SharpDevs.Fleksator
 
         public Noun GetRandomNoun()
         {
-            return this.nouns[this.rnd.Next(0, this.nouns.Count)];
+            List<Noun> matches = this.nouns.FindAll(
+                item => GenerationCategoryFilter.AllowsNoun(item.Categories));
+            return matches.Count == 0 ? null : matches[this.rnd.Next(0, matches.Count)];
         }
 
         public Noun GetRandomNoun(GrammaticalGender genre)
@@ -133,6 +135,7 @@ namespace SharpDevs.Fleksator
                 return null;
 
             List<Noun> subList = this.sortedNouns[genre];
+            subList = subList.FindAll(item => GenerationCategoryFilter.AllowsNoun(item.Categories));
 
             if (subList.Count > 0)
                 return subList[this.rnd.Next(0, subList.Count)];
@@ -143,6 +146,7 @@ namespace SharpDevs.Fleksator
         public Noun GetNoun(GrammaticalGender? genre, int? categoryId, bool shallSupportSingular, bool shallSupportPlural)
         {
             List<Noun> searchResults = this.nouns.FindAll(p => (genre == null || p.Genre == genre)
+                && GenerationCategoryFilter.AllowsNoun(p.Categories)
                 && (categoryId == null || p.Categories.Contains(categoryId ?? -1))
                 && (!shallSupportPlural || p.CanBePlural)
                 && (!shallSupportSingular || p.CanBeSingular));
@@ -156,6 +160,7 @@ namespace SharpDevs.Fleksator
         public Noun GetNounEx(GrammaticalGender? genre, List<int> categoryIds, bool shallSupportSingular, bool shallSupportPlural)
         {
             List<Noun> searchResults = this.nouns.FindAll(p => (genre == null || p.Genre == genre)
+                && GenerationCategoryFilter.AllowsNoun(p.Categories)
                 && (categoryIds == null || categoryIds.Count == 0 || p.Categories.Exists(d => categoryIds.Contains(d)))
                 && (!shallSupportSingular || p.CanBeSingular)
                 && (!shallSupportPlural || p.CanBePlural));
@@ -165,5 +170,6 @@ namespace SharpDevs.Fleksator
 
             return searchResults[this.rnd.Next(0, searchResults.Count)];
         }
+
     }
 }

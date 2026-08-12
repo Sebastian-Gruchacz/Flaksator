@@ -6,6 +6,7 @@ Snapshot after full categorization and the first vocabulary expansion:
 | --- | ---: | ---: | ---: | ---: |
 | Nouns | 276 | 182/276 (65.9%) | 276/276 (100%) | 0 |
 | Adjectives | 312 | 40/273 (14.7%) | 312/312 (100%) | 0 |
+| Verbs | 48 | 0/48 (0%) | 100/100 (100%) | 0 |
 
 The initial conservative pass classified entries with an unambiguous match in the original taxonomy. Later passes categorized the remaining historical entries and extended the taxonomy without changing identifiers 1-6.
 
@@ -44,10 +45,12 @@ The final noun categorization pass added three stable categories:
 
 Existing category identifiers must remain stable because dictionary records and formatter suffixes persist their numeric values.
 
+The verb taxonomy contains twelve stable categories: violence, injury, destruction, movement, sound and voice, transformation, control and restraint, supernatural, sensation and emotion, creation and transfer, state and existence, and thought and intent. All 48 historical proposals and 52 verbs extracted from literal verse text have at least one category. These categories drive the main generator UI's session-level exclusions and positive `$` filtering without modifying verse definitions.
+
 The executable specifications enforce these safeguards:
 
 - every category identifier referenced by a dictionary entry must exist in `Categories.ini`;
-- every noun and adjective must remain categorized;
+- every noun, adjective and verb must remain categorized;
 - every root must be unique within its dictionary word class;
 - every extended adjective category must generate at least one valid inflected form;
 - every new noun category must generate at least one valid inflected form;

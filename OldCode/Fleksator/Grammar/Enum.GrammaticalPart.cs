@@ -14,7 +14,11 @@ namespace SharpDevs.Fleksator.Grammar
         /// <summary>
         /// Czasownik
         /// </summary>
-        Verb
+        Verb,
+        /// <summary>
+        /// Zaimek
+        /// </summary>
+        Pronoun
 
     }
 }

@@ -7,7 +7,7 @@ using SharpDevs.Fleksator.Grammar;
 
 namespace Flaksator
 {
-    class DecodeBase
+    public class DecodeBase
     {
         protected string DecodeLine(string verse)
         {
@@ -183,23 +183,61 @@ namespace Flaksator
                         }
                     case 'V': // Verb (czasownik)
                         {
-                            if (code.Length == 4)
+                            if (code.Length == 4 || code.Length == 5)
                             {
                                 VerbTense tense = VerbGrammar.GetTense(code[1]);
                                 GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
                                 DecliantionNumber number = EnumHelper.GetWordAmount(code[3]);
+                                GrammaticalGender gender = code.Length == 5
+                                    ? EnumHelper.GetWordGenre(code[4])
+                                    : GrammaticalGender._Unknown;
                                 if (tense == VerbTense._Unknown || person == GrammaticalPerson._Unknown ||
-                                    number == DecliantionNumber._Unknown)
+                                    number == DecliantionNumber._Unknown ||
+                                    (tense == VerbTense.Past && gender == GrammaticalGender._Unknown))
                                     return "{VERB_DEFINITION_INCOMPLETE}";
 
                                 Verb verb = VerbCollection.Collection.GetVerb(candidate =>
+                                    candidate.CanBeActive &&
+                                    !candidate.IsReflexive &&
+                                    WordFormatterParser.MatchesCategories(candidate.Categories, categoryIds) &&
                                     VerbConjurer.Conjurer.MakeWord(candidate, tense, person, number,
-                                        GrammaticalGender._Unknown) != null);
+                                        gender) != null);
                                 if (verb == null)
                                     return "{NO_VALID_VERB}";
 
                                 return VerbConjurer.Conjurer.MakeWord(verb, tense, person, number,
-                                    GrammaticalGender._Unknown);
+                                    gender);
+                            }
+                            break;
+                        }
+                    case 'P': // Pronoun (zaimek)
+                        {
+                            if (code.Length == 5 || code.Length == 6)
+                            {
+                                if (code.Length == 6 && code[5] != 'P')
+                                    return "{INVALID_FORMATTER}";
+
+                                InflectionCase aCase = EnumHelper.GetWordCase(code[1]);
+                                GrammaticalPerson person = VerbGrammar.GetPerson(code[2]);
+                                DecliantionNumber number = EnumHelper.GetWordAmount(code[3]);
+                                GrammaticalGender gender = EnumHelper.GetWordGenre(code[4]);
+                                PronounVariant variant = code.Length == 6
+                                    ? PronounVariant.Prepositional
+                                    : PronounVariant.Neutral;
+                                if (aCase == InflectionCase._Unknown ||
+                                    person == GrammaticalPerson._Unknown ||
+                                    number == DecliantionNumber._Unknown ||
+                                    gender == GrammaticalGender._Unknown)
+                                    return "{PRONOUN_DEFINITION_INCOMPLETE}";
+
+                                Pronoun pronoun = PronounCollection.Collection.GetPronoun(candidate =>
+                                    PronounDecliner.Decliner.MakeWord(candidate, aCase, person, number,
+                                        gender, variant) != null);
+                                if (pronoun == null)
+                                    return "{NO_VALID_PRONOUN}";
+
+                                return PronounDecliner.Decliner.MakeWord(pronoun, aCase, person, number,
+                                    gender, variant);
                             }
                             break;
                         }
